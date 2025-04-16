@@ -8,7 +8,7 @@
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
               <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
-              <x-nav-link href="/room" :active="request()->is('room')">Room</x-nav-link>
+              <x-nav-link href="/rooms" :active="request()->is('rooms')">Room</x-nav-link>
               <x-nav-link href="/facilities" :active="request()->is('facilities')">Facilities</x-nav-link>
               <x-nav-link href="/reviews" :active="request()->is('reviews')">Reviews</x-nav-link>
               <x-nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav-link>
@@ -84,7 +84,7 @@
       <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
         <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
         <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
-        <x-nav-link href="/room" :active="request()->is('room')">Room</x-nav-link>
+        <x-nav-link href="/rooms" :active="request()->is('rooms')">Room</x-nav-link>
         <x-nav-link href="/facilities" :active="request()->is('facilities')">Facilities</x-nav-link>
         <x-nav-link href="/reviews" :active="request()->is('reviews')">Reviews</x-nav-link>
         <x-nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav-link>
