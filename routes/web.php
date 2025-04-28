@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Models\Room;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
@@ -30,3 +31,6 @@ Route::get('/reviews', function () {
 Route::get('/contact', function () {
     return view('contact', ['tittle' => 'Contact Page']);
 });
+
+Route::get('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'authenticate']);
