@@ -15,8 +15,7 @@ Route::get('/rooms', function () {
     return view('rooms', ['tittle' => 'Room Page', 'rooms' => Room::all()]);
 });
 
-Route::get('/rooms/{slug}', function($slug){
-    $room = Room::find($slug);
+Route::get('/rooms/{room:slug}', function(Room $room){
     return view('room', ['tittle' => 'Single Post', 'room' => $room]);
 });
 
