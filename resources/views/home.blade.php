@@ -1,6 +1,5 @@
 <x-layout>
     <x-slot:tittle>{{ $tittle }}
-
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,7 +47,4 @@
     
     </x-slot:tittle>
 
-  </x-layout>
-  <x-slot:tittle>{{ $tittle }}</x-slot:tittle>
-  <h3>Ini Home Page</h3>
 </x-layout> 
