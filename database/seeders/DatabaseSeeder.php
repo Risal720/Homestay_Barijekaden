@@ -17,7 +17,13 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Test User',
-            'email' => 'test@example.com',
+            'email' => 'another.test@example.com',
+        ]);
+
+        // Panggil seeder lainnya di sini
+        $this->call([
+            RoomSeeder::class,
+            RoomImageSeeder::class,
         ]);
     }
 }

@@ -1,8 +1,9 @@
 <x-layout>
   <x-slot:tittle>{{ $tittle }}</x-slot:tittle>
   <style>
-    body {
+    .body {
         overflow-x: hidden;
+        
     }
 
     .side-photo {
@@ -29,14 +30,13 @@
     .content-area {
         margin-left: 150px;
         margin-right: 150px;
-        padding: 2rem;
     }
 
     .room-card {
         background-color: white;
         border-radius: 0.5rem;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 1rem;
+        margin-bottom: 2rem; /* Atur jarak antar card di sini */
         padding: 1rem;
         display: grid;
         grid-template-columns: 200px 1fr auto;
@@ -165,35 +165,63 @@
     }
   </style>
   
-  <div class="side-photo side-photo-left">FOTO BERGANTIAN</div>
+  <div class="body">
+    
+        <div class="side-photo side-photo-left">FOTO BERGANTIAN</div>
+        <div class="content-area "> 
 
-@foreach ($rooms as $room)
-
-  <div class="content-area mt-24 md:mt-16 ">
-    <div class="room-card relative">
-      <div class="room-image">FOTO ROOM (UKURAN 16:9)</div>
-      <div class="room-details">
-          <div class="room-name">NAMA ROOM</div>
-          <div class="room-info">RATING ROOM</div>
-      </div>
-      <div class="price-button-container">
-          <div class="room-price">HARGA ROOM</div>
-          <button class="book-button">PESAN</button>
-      </div>
-      <div class="hidden room-full-details ">
-          <p>Ini adalah detail lengkap untuk kamar ini. Informasi lebih lanjut mengenai fasilitas dan deskripsi kamar akan ditampilkan di sini.</p>
-      </div>
-      <div class="show-details-arrow cursor-pointer text-center absolute bottom-4 left-1/2 -translate-x-1/2">
-          <svg class="w-6 h-6 mx-auto transform rotate-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-      </div>
-    </div>
+            @foreach ($rooms as $room)
+                <div class="room-card relative">
+                    <div class="room-image">
+                        @if ($room -> foto_logo)
+                            <img src="{{ asset('image/logos/' . $room -> foto_logo) }}" alt="Logo {{ $room -> nama_room }}" style="max-width: 100%; max-heigt: 100%;">
+                            @else
+                            Logo Tidak Tersedia
+                        @endif
+                       
+                    </div>
+                    <div class="room-details">
+                        <div class="room-name">{{ $room -> nama_room }}</div>
+                        <div class="room-info">{{-- Anda bisa menambahkan informasi rating di sini jika ada --}}</div>
+                    </div>
+                    <div class="price-button-container">
+                        <div class="room-price">Rp {{ number_format($room->harga_room, 0, ',', '.') }}</div>
+                        <a href="/rooms/{{ $room -> slug }}" class="book-button">LIHAT DETAIL</a>
+                    </div>
+                    <div class="hidden room-full-details ">
+                        <p>
+                            {{ $room -> detail_room }}
+                        </p>
+                    </div>
+                    <div class="show-details-arrow cursor-pointer text-center absolute bottom-4 left-1/2 -translate-x-1/2">
+                        <svg class="w-6 h-6 mx-auto transform rotate-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+            @endforeach
+        
+        </div>
+        
+        <div class="side-photo side-photo-right">FOTO BERGANTIAN</div>
   </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const roomCards = document.querySelectorAll('.room-card');
 
-@endforeach
+        roomCards.forEach(card => {
+            const arrow = card.querySelector('.show-details-arrow');
+            const fullDetails = card.querySelector('.room-full-details');
 
-  <div class="side-photo side-photo-right">FOTO BERGANTIAN</div>
+            arrow.addEventListener('click', function() {
+                card.classList.toggle('expanded');
+                fullDetails.classList.toggle('hidden');
+            });
+        });
+    });
+  </script>
+
 </x-layout>
 
 

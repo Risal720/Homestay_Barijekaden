@@ -1,4 +1,4 @@
-<nav class="bg-[#432a0b]" x-data="{ isOpen: false }">
+<nav class="bg-[#432a0b] fixed-navbar"  x-data="{ isOpen: false }">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
@@ -114,3 +114,12 @@
       </div>
     </div>
 </nav>
+<style>
+.fixed-navbar {
+    position: fixed;
+    top: 0; /* Sesuaikan dengan tinggi header Anda */
+    left: 0;
+    right: 0;
+    z-index: 30;
+} 
+</style>

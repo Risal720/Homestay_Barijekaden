@@ -12,11 +12,11 @@ Route::get('/', function () {
 });
 
 Route::get('/rooms', function () {
-    return view('rooms', ['tittle' => 'Room Page', 'rooms' => Room::all()]);
-});
+    return view('rooms', ['tittle' => 'Rooms Page', 'rooms' => Room::all()]);
+})->name('rooms.index');
 
 Route::get('/rooms/{room:slug}', function(Room $room){
-    return view('room', ['tittle' => 'Single Post', 'room' => $room]);
+    return view('room', ['tittle' => 'Room', 'room' => $room]);
 });
 
 Route::get('/facilities', function () {
