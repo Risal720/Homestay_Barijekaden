@@ -2,20 +2,21 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
-          <div class="flex items-center">
+          <div class="relative flex items-center">
             <div class="shrink-0">
               <img class="size-10 mr-2" src="{{ asset('image/logo.png') }}" alt="Your Company">
             </div>
               <p class="text-[#bf7029] norican-regular">Barijekaden</p>
             </div>
+        </div>
+        <div class="flex items-center">
           <div class="hidden md:block">
-            <div class="ml-105 flex items-baseline space-x-4">
-              <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
-              <x-nav-link href="/rooms" :active="request()->is('rooms')">Room</x-nav-link>
-              <x-nav-link href="/facilities" :active="request()->is('facilities')">Facilities</x-nav-link>
-              <x-nav-link href="/reviews" :active="request()->is('reviews')">Reviews</x-nav-link>
-              <x-nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav-link>
-            </div>
+          <div class="ml-10 flex items-center space-x-4 justify-end">
+            <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
+            <x-nav-link href="/rooms" :active="request()->is('rooms')">Room</x-nav-link>
+            <x-nav-link href="/facilities" :active="request()->is('facilities')">Facilities</x-nav-link>
+            <x-nav-link href="/reviews" :active="request()->is('reviews')">Reviews</x-nav-link>
+            <x-nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav-link>
           </div>
         </div>
         <div class="hidden md:block">
@@ -64,6 +65,8 @@
             </div>
           </div>
         </div>
+        </div>
+        
         <div class="-mr-2 flex md:hidden">
           <!-- Mobile menu button -->
           <button type="button" @click="isOpen = !isOpen" class="relative inline-flex items-center justify-center rounded-md bg-[#5e3d13] p-2 text-[#bf7029] hover:bg-[#885318] hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#bf7029] focus:outline-hidden" aria-controls="mobile-menu" aria-expanded="false">
