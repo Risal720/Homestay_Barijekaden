@@ -2,11 +2,14 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
-          <div class="shrink-0">
-            <img class="size-13" src="{{ asset('image/logo.png') }}" alt="Your Company">
-          </div>
+          <div class="flex items-center">
+            <div class="shrink-0">
+              <img class="size-10 mr-2" src="{{ asset('image/logo.png') }}" alt="Your Company">
+            </div>
+              <p class="text-[#bf7029] norican-regular">Barijekaden</p>
+            </div>
           <div class="hidden md:block">
-            <div class="ml-10 flex items-baseline space-x-4">
+            <div class="ml-105 flex items-baseline space-x-4">
               <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
               <x-nav-link href="/rooms" :active="request()->is('rooms')">Room</x-nav-link>
               <x-nav-link href="/facilities" :active="request()->is('facilities')">Facilities</x-nav-link>
@@ -122,4 +125,9 @@
     right: 0;
     z-index: 30;
 } 
+.norican-regular {
+    font-size: 2rem;
+    font-family: "Norican", cursive;
+    font-style: normal;
+      }
 </style>
