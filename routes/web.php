@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ReviewsController;
 use App\Models\Room;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
@@ -23,9 +24,9 @@ Route::get('/facilities', function () {
     return view('facilities', ['tittle' => 'Facilities Page']);
 });
 
-Route::get('/reviews', function () {
-    return view('reviews', ['tittle' => 'Reviews Page']);
-});
+
+Route::get('/reviews', [App\Http\Controllers\ReviewsController::class, 'index']);
+    return view('home', ['tittle' => 'Home Page']);
 
 Route::get('/contact', function () {
     return view('contact', ['tittle' => 'Contact Page']);
