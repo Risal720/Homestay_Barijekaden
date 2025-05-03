@@ -35,4 +35,30 @@
     <div>
         {{-- Konten lain di halaman home jika ada --}}
     </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Home Page</h1>
+        <div>
+            <button id="loginBtn" style="margin-left: 10px;">LOGIN</button>
+            <span style="margin: 0 5px;">|</span>
+            <button id="registerBtn" style="margin-left: 5px;">REGISTER</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginButton = document.getElementById('loginBtn');
+            const registerButton = document.getElementById('registerBtn');
+    
+            loginButton.addEventListener('click', function() {
+                window.location.href = '/login';
+            });
+    
+            registerButton.addEventListener('click', function() {
+                window.location.href = '/register';
+            });
+        });
+    </script>
+
 </x-layout>
+
