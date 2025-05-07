@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use COM;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -18,7 +20,7 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
         
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credential)) {
             $request->session()->regenerate();
  
             return redirect()->intended('dashboard');
