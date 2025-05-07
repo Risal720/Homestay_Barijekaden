@@ -34,3 +34,6 @@ Route::get('/contact', function () {
 
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
