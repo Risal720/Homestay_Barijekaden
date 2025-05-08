@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:tittle>Reviews Page</x-slot:tittle>
+    <x-slot:tittle>{{ $tittle }}</x-slot:tittle>
   
     <div class="container mx-auto px-6 py-8">
         <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Ulasan Pengguna ⭐</h2>

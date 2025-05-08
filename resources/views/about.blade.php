@@ -1,7 +1,5 @@
 <x-layout>
-  <x-slot:title>
-      Tentang Kami
-  </x-slot:title>
+  <x-slot:tittle>{{ $tittle }}</x-slot:tittle>
 
   <h1>Tentang Project Kami</h1>
   <p>Ini adalah deskripsi singkat tentang project kamu. Kamu bisa menambahkan informasi lebih detail di sini.</p>
