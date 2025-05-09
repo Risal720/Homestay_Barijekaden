@@ -25,12 +25,15 @@ Route::get('/facilities', function () {
 });
 
 
-Route::get('/reviews', [App\Http\Controllers\ReviewsController::class, 'index']);
-    return view('home', ['tittle' => 'Home Page']);
+Route::get('/reviews', [App\Http\Controllers\ReviewsController::class, 'index'] );
 
-Route::get('/contact', function () {
-    return view('contact', ['tittle' => 'Contact Page']);
+
+Route::get('/about', function () {
+    return view('about', ['tittle' => 'About Us']);
 });
 
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);

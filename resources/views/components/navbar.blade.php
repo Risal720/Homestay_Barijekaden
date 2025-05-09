@@ -16,7 +16,7 @@
             <x-nav-link href="/rooms" :active="request()->is('rooms')">Room</x-nav-link>
             <x-nav-link href="/facilities" :active="request()->is('facilities')">Facilities</x-nav-link>
             <x-nav-link href="/reviews" :active="request()->is('reviews')">Reviews</x-nav-link>
-            <x-nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav-link>
+            <x-nav-link href="/about" :active="request()->is('about')">About Us</x-nav-link>
           </div>
         </div>
         <div class="hidden md:block">
@@ -93,7 +93,7 @@
         <x-nav-link href="/rooms" :active="request()->is('rooms')">Room</x-nav-link>
         <x-nav-link href="/facilities" :active="request()->is('facilities')">Facilities</x-nav-link>
         <x-nav-link href="/reviews" :active="request()->is('reviews')">Reviews</x-nav-link>
-        <x-nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav-link>
+        <x-nav-link href="/about" :active="request()->is('about')">About Us</x-nav-link>
       </div>
       <div class="border-t border-[#bf7029] pt-4 pb-3">
         <div class="flex items-center px-5">
