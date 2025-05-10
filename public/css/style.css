@@ -5,6 +5,8 @@
 }
 html body {
     overflow-x: hidden;
+    overflow-y: hidden;
+    
 }
 .slider-container {
     background-color: black;
@@ -22,6 +24,7 @@ html body {
     position: relative;
     position: absolute;
     transition: opacity 3000ms;
+    padding-top: 5rem;
 }
 .slider-container .slider-item[data-show="show"] {
     opacity: 1;
