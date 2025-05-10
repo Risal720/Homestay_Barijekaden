@@ -1,14 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
 <x-layout>
   <x-slot:tittle>{{ $tittle }}</x-slot:tittle>
   <!DOCTYPE html>
@@ -23,7 +13,7 @@
   <body>
   <div class="slider-container">
       <div class="slider-item">
-        <img src="image/fasilitasimg/kolam.png" alt="" />
+        <img src="image/fasilitasimg/kolam.png" alt="">
         <div class="slider-content">
           <h2 class="slider-title">Swimming Pool</h2>
           <p class="slider-description">“Rasakan kesegaran tiada duanya di kolam renang kami yang dirancang untuk relaksasi dan kenyamanan maksimal—tempat sempurna melepas penat setelah seharian beraktivitas.”</p>
@@ -31,7 +21,7 @@
         </div>
       </div>
       <div class="slider-item">
-        <img src="./image/meetingroom.png" alt="" />
+        <img src="image/fasilitasimg/meetingroom.png" alt="" />
         <div class="slider-content">
           <h2 class="slider-title">Meeting Room</h2>
           <p class="slider-description">“Temukan standar baru untuk pertemuan profesional dengan ruang meeting kami yang dapat disesuaikan untuk segala kebutuhan bisnis Anda.”</p>
@@ -39,7 +29,7 @@
         </div>
       </div>
       <div class="slider-item">
-        <img src="./image/parkiran.png" alt="" />
+        <img src="image/fasilitasimg/parkiran.png" alt="" />
         <div class="slider-content">
           <h2 class="slider-title">Area Parkir</h2>
           <p class="slider-description">“Fasilitas parkir luas, aman, dan bebas biaya—karena kenyamanan Anda adalah prioritas kami sejak langkah pertama.”</p>
@@ -47,7 +37,7 @@
         </div>
       </div>
       <div class="slider-item">
-        <img src="./image/gazebo.png" alt="" />
+        <img src="image/fasilitasimg/gazebo.png" alt="" />
         <div class="slider-content">
           <h2 class="slider-title">Gazebo</h2>
           <p class="slider-description">"Santai sejenak di gazebo nyaman kami — tempat asyik buat ngopi, ngobrol, atau sekadar menikmati angin sepoi-sepoi dan suasana tenang di tengah hotel yang bikin betah."</p>
