@@ -32,6 +32,10 @@ Route::get('/about', function () {
     return view('about', ['tittle' => 'About Us']);
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
 
