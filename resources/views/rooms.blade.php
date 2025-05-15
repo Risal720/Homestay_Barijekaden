@@ -166,7 +166,6 @@
   </style>
   
   <div class="body">
-    
         <div class="side-photo side-photo-left">FOTO BERGANTIAN</div>
         <div class="content-area "> 
 
