@@ -5,8 +5,7 @@
             <div class="deskripsi-area">
                 <h2>Deskripsi</h2>
                 <p>
-                Terletak di kawasan pegunungan yang dikelilingi hutan pinus, BARIJEKADEN Homestay menghadirkan pengalaman menginap yang menyatu dengan alam. Dengan desain yang mengutamakan kenyamanan dan estetika alami, setiap sudut homestay menciptakan suasana hangat dan tenang bagi para tamu.
-Kami menawarkan berbagai fasilitas, termasuk kamar dengan pemandangan alam yang menakjubkan, area bersantai outdoor, serta akses langsung ke jalur pendakian dan wisata alam. BARIJEKADEN adalah pilihan tepat bagi mereka yang mencari ketenangan, petualangan, atau sekadar menikmati keindahan pegunungan dengan udara yang sejuk dan segar.
+                Rasakan pengalaman menginap tak terlupakan di BARIJEKADEN Homestay, yang terletak di kawasan pegunungan yang tenang dan dikelilingi hutan pinus yang mempesona. Kami hadirkan akomodasi yang nyaman dengan desain yang mengutamakan keindahan alam, menciptakan suasana hangat dan santai untuk setiap tamu. Manfaatkan berbagai fasilitas yang kami sediakan, mulai dari kamar-kamar dengan panorama yang menakjubkan, area outdoor yang asri, hingga kemudahan akses ke jalur hiking dan destinasi wisata alam. BARIJEKADEN adalah tempat yang tepat untuk mewujudkan liburan impian Anda, baik untuk bersantai, berpetualang, maupun menikmati keindahan alam pegunungan yang menyegarkan. 
                 </p>
             </div>
             <div class="peta-area">
@@ -66,3 +65,4 @@ Kami menawarkan berbagai fasilitas, termasuk kamar dengan pemandangan alam yang 
         border-radius: 0.5rem;
       }
     </style>
+
