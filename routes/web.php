@@ -33,7 +33,23 @@ Route::get('/about', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard', ['tittle' => 'Dashboard']);
+});
+
+Route::get('/booking', function () {
+    return view('booking', ['tittle' => 'Booking']);
+});
+
+Route::get('/discounts', function () {
+    return view('discounts', ['tittle' => 'Discount']);
+});
+
+Route::get('/settings', function () {
+    return view('settings', ['tittle' => 'Settings']);
+});
+
+Route::get('/reservation', function () {
+    return view('reservation', ['tittle' => 'Reservation']);
 });
 
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
