@@ -1,171 +1,75 @@
 <x-layout>
-      
-    <x-slot:tittle>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1>{{ $tittle }}</h1>
-            <div>
-                <button id="loginBtn" class=" rounded-md px-3 py-2 bg-[#5e3d13] p-1 text-[0.6em] text-[#bf7029] hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#bf7029] focus:outline-hidden">LOGIN</button>
-            </div>
-        </div>
-    </x-slot:tittle>
-
-    <div class="container" id="login-form">
-        <h2>Login</h2>
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Masukkan email Anda">
-            <div id="email-error" class="error-message"></div>
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Masukkan password Anda">
-            <div id="password-error" class="error-message"></div>
-        </div>
-        <div class="form-group">
-            <button id="login-button">Login</button>
-        </div>
-        <div class="form-group">
-            <button class="google-login-button" id="google-login-button">
-                <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-                    <path fill="#4285F4" d="M45.23 24.25H24v9.46h12.19c-.83 5.65-4.76 9.8-10.8 9.8-6.62 0-12-5.43-12-12s5.38-12 12-12c3.17 0 5.97 1.25 8.05 3.22l5.97-5.73c-3.44-3.14-7.9-5-13.8-5-11.05 0-20 8.95-20 20s8.95 20 20 20c11.04 0 20-8.95 20-20z"/>
-                    <path fill="#34A853" d="M24 48c13.255 0 24-10.745 24-24S37.255 0 24 0 0 10.745 0 24s10.745 24 24 24z"/>
-                    <path fill="#FBBC05" d="M24 48c6.475 0 12-2.13 15.89-5.61l-6.1-5.24c-2.45 1.6-5.56 2.55-9.79 2.55-5.38 0-9.94-3.66-11.44-8.43h-14.7v5.24c3.18 5.9 9.95 9.84 17.63 9.84z"/>
-                    <path fill="#EA4335" d="M24 0c-13.255 0-24 10.745-24 24s10.745 24 24 24c4.72 0 8.91-1.63 12.23-4.36l-6.53-5.63c-2.75 1.9-6.62 3.03-12.7 3.03-9.89 0-18-6.89-20.87-16.25H0v-5.24c3.91-7.13 11.92-12 20.87-12 5.8 0 10.98 2.27 14.73 5.97l-6.1 5.24c-3.6-2.45-8.22-3.89-14.63-3.89z"/>
-                </svg>
-                Login with Google
-            </button>
-        </div>
-        <div class="switch-form">
-            <a href="#" id="switch-to-register">Belum punya akun? Daftar di sini</a>
-        </div>
-    </div>
-
-    <div class="container" id="register-form" style="display: none;">
-        <h2>Register</h2>
-        <div class="form-group">
-            <label for="register-name">Nama</label>
-            <input type="text" id="register-name" name="name" placeholder="Masukkan nama Anda">
-            <div id="register-name-error" class="error-message"></div>
-        </div>
-        <div class="form-group">
-            <label for="register-email">Email</label>
-            <input type="email" id="register-email" name="email" placeholder="Masukkan email Anda">
-            <div id="register-email-error" class="error-message"></div>
-        </div>
-        <div class="form-group">
-            <label for="register-password">Password</label>
-            <input type="password" id="register-password" name="password" placeholder="Masukkan password Anda">
-            <div id="register-password-error" class="error-message"></div>
-        </div>
-        <div class="form-group">
-            <button id="register-button">Register</button>
-        </div>
-        <div class="switch-form">
-            <a href="#" id="switch-to-login">Sudah punya akun? Login di sini</a>
-        </div>
-    </div>
-
-    <div>
-        {{-- Konten lain di halaman home jika ada --}}
-    </div>
-     <script>
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
-        const switchToRegisterLink = document.getElementById('switch-to-register');
-        const switchToLoginLink = document.getElementById('switch-to-login');
-        const loginButton = document.getElementById('login-button');
-        const registerButton = document.getElementById('register-button');
-        const googleLoginButton = document.getElementById('google-login-button');
-
-        switchToRegisterLink.addEventListener('click', (event) => {
-            event.preventDefault();
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'block';
-        });
-
-        switchToLoginLink.addEventListener('click', (event) => {
-            event.preventDefault();
-            registerForm.style.display = 'none';
-            loginForm.style.display = 'block';
-        });
-
-        loginButton.addEventListener('click', () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            let hasErrors = false;
-
-            document.getElementById('email-error').textContent = '';
-            document.getElementById('password-error').textContent = '';
-
-            if (!email) {
-                document.getElementById('email-error').textContent = 'Email harus diisi';
-                hasErrors = true;
-            }
-
-            if (!password) {
-                document.getElementById('password-error').textContent = 'Password harus diisi';
-                hasErrors = true;
-            }
-
-            if (!hasErrors) {
-                // Simulasi API login (ganti dengan fetch() yang sebenarnya)
-                console.log('Melakukan login dengan:', email, password);
-                alert(`Berhasil login dengan email: ${email}`);
-            }
-        });
-
-        registerButton.addEventListener('click', () => {
-            const name = document.getElementById('register-name').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            let hasErrors = false;
-
-            document.getElementById('register-name-error').textContent = '';
-            document.getElementById('register-email-error').textContent = '';
-            document.getElementById('register-password-error').textContent = '';
-
-            if (!name) {
-                document.getElementById('register-name-error').textContent = 'Nama harus diisi';
-                hasErrors = true;
-            }
-            if (!email) {
-                document.getElementById('register-email-error').textContent = 'Email harus diisi';
-                hasErrors = true;
-            }
-            if (!password) {
-                document.getElementById('register-password-error').textContent = 'Password harus diisi';
-                hasErrors = true;
-            }
-
-            if (!hasErrors) {
-                // Simulasi API register (ganti dengan fetch() yang sebenarnya)
-                console.log('Melakukan registrasi dengan:', name, email, password);
-                alert(`Berhasil mendaftar dengan nama: ${name} dan email: ${email}`);
-            }
-        });
-
-        googleLoginButton.addEventListener('click', () => {
-            // Kode untuk memulai proses login dengan Google
-            console.log('Memulai proses login dengan Google');
-            alert('Fitur Login dengan Google belum diimplementasikan. Harap gunakan tombol Login biasa.');
-            // Anda akan menggunakan library seperti Google Sign-In for JavaScript untuk ini.
-            // Lihat: https://developers.google.com/identity/sign-in/web
-        });
-    </script>
-</x-layout>
-
- <style>
+    <x-slot:tittle>{{ $tittle }}</x-slot:tittle>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Login/Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
         body {
-            font-family: sans-serif;
+            font-family: 'Inter', sans-serif; /* Using Inter font */
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
             color: #333;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column; /* Set flex direction to column */
+            align-items: center; /* Center horizontally */
             min-height: 100vh;
+            position: relative; /* Needed for z-index of background */
+            overflow: hidden; /* Prevent scrollbars from background */
         }
+
+        /* Custom message box style */
+        #messageBox {
+            position: fixed;
+            top: 1rem; /* Distance from top */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50; /* Default green for success */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            display: none; /* Hidden by default */
+            text-align: center;
+        }
+
+        /* Background slideshow container */
+        .background-slideshow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place behind other content */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            animation: slideshow 30s infinite; /* 3 images * 10 seconds = 30s cycle */
+            transition: background-image 1s ease-in-out; /* Smooth transition for image change */
+        }
+
+        /* Keyframes for the background slideshow animation */
+        @keyframes slideshow {
+            0% { background-image: url('image/orang.png'); opacity: 1; } /* Image 1 */
+            10% { opacity: 1; } /* Hold image 1 */
+            23% { opacity: 0; } /* Fade out image 1 */
+            25% { background-image: url('image/room.png'); opacity: 0; } /* Switch to image 2 */
+            33% { opacity: 1; } /* Fade in image 2 */
+            43% { opacity: 1; } /* Hold image 2 */
+            56% { opacity: 0; } /* Fade out image 2 */
+            58% { background-image: url('image/view.png');opacity: 0; } /* Switch to image 3 */
+            66% { opacity: 1; } /* Fade in image 3 */
+            76% { opacity: 1; } /* Hold image 3 */
+            89% { opacity: 0; } /* Fade out image 3 */
+            91% { background-image: url('image/view2.png'); opacity: 0; } /* Switch back to image 1 */
+            100% { opacity: 1; } /* Fade in image 1 for next cycle */
+        }
+
 
         .container {
             background-color: #fff;
@@ -173,6 +77,10 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             width: 300px;
+            margin-top: 20vh; /* Changed from 10vh to 20vh to move it down */
+            margin-bottom: auto; /* Ensure container stays centered if other content below */
+            position: relative; /* Ensure it's above the background */
+            z-index: 1; /* Place above the background slideshow */
         }
 
         h2 {
@@ -235,9 +143,9 @@
         }
 
         .google-login-button {
-            background-color: #4285f4; /* Google blue */
-            color: #fff;
-            border: none;
+            background-color: #fff; /* White background for Google button */
+            color: #757575; /* Gray text color for Google */
+            border: 1px solid #dadada; /* Light gray border */
             padding: 10px;
             border-radius: 4px;
             cursor: pointer;
@@ -248,15 +156,198 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow */
         }
 
         .google-login-button:hover {
-            background-color: #357ae8;
+            background-color: #f7f7f7; /* Slightly darker on hover */
         }
 
         .google-icon {
             width: 20px;
             height: 20px;
-            margin-right: 10px;
+            margin-right: 10px; /* Space between icon and text */
         }
     </style>
+</head>
+<body>
+    <div class="background-slideshow"></div>
+
+    <div id="messageBox" class="fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 ease-in-out opacity-0" style="display: none;">
+    </div>
+
+    <main class="flex-grow flex flex-col items-center justify-center p-4">
+        <div class="container" id="login-form">
+            <h2>Login</h2>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Masukkan username Anda">
+                <div id="username-error" class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Masukkan password Anda">
+                <div id="password-error" class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <button id="login-button">Login</button>
+            </div>
+            <div class="form-group">
+                <button class="google-login-button" id="google-login-button">
+                    <svg class="google-icon" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.75 12.25c0-.8-.06-1.55-.18-2.25H12v4.25h6.25c-.25 1.5-1.1 2.75-2.5 3.5v2.75h3.5c2.05-1.9 3.25-4.7 3.25-8.25z"/>
+                        <path fill="#34A853" d="M12 23.5c3.25 0 6.05-1.05 8.05-3.22l-3.5-2.75c-1.05.7-2.45 1.12-4.55 1.12-3.55 0-6.55-2.4-7.65-5.62H.85v2.88c2.15 4.25 6.4 7.25 11.15 7.25z"/>
+                        <path fill="#FBBC05" d="M4.35 14.25c-.25-.7-.38-1.45-.38-2.25s.13-1.55.38-2.25V7.05H.85C.3 8.15 0 9.65 0 12s.3 3.85.85 4.95l3.5-2.7z"/>
+                        <path fill="#EA4335" d="M12 4.75c1.8 0 3.4.65 4.65 1.85l3.15-3.15C17.95 1.45 15.25 0 12 0 7.25 0 3 2.75.85 7.05l3.5 2.7c1.1-3.25 4.1-5.55 7.65-5.55z"/>
+                    </svg>
+                    <span>Login with Google</span>
+                </button>
+            </div>
+            <div class="switch-form">
+                <a href="#" id="switch-to-register">Belum punya akun? Daftar di sini</a>
+            </div>
+        </div>
+
+        <div class="container" id="register-form" style="display: none;">
+            <h2>Register</h2>
+            <div class="form-group">
+                <label for="register-name">Nama</label>
+                <input type="text" id="register-name" name="name" placeholder="Masukkan nama Anda">
+                <div id="register-name-error" class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <label for="register-email">Email</label>
+                <input type="email" id="register-email" name="email" placeholder="Masukkan email Anda">
+                <div id="register-email-error" class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <label for="register-password">Password</label>
+                <input type="password" id="register-password" name="password" placeholder="Masukkan password Anda">
+                <div id="register-password-error" class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <button id="register-button">Register</button>
+            </div>
+            <div class="switch-form">
+                <a href="#" id="switch-to-login">Sudah punya akun? Login di sini</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const switchToRegisterLink = document.getElementById('switch-to-register');
+        const switchToLoginLink = document.getElementById('switch-to-login');
+        const loginButton = document.getElementById('login-button');
+        const registerButton = document.getElementById('register-button');
+        const googleLoginButton = document.getElementById('google-login-button');
+
+        // Function to display custom messages
+        function showMessage(message, type = 'success') {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.classList.remove('bg-green-500', 'bg-red-500'); // Remove previous color classes
+            if (type === 'success') {
+                messageBox.classList.add('bg-green-500');
+            } else if (type === 'error') {
+                messageBox.classList.add('bg-red-500');
+            }
+            messageBox.style.display = 'block'; // Show element
+            setTimeout(() => {
+                messageBox.classList.remove('opacity-0');
+                messageBox.classList.add('opacity-100');
+            }, 10); // Small delay for transition
+
+            setTimeout(() => {
+                messageBox.classList.remove('opacity-100');
+                messageBox.classList.add('opacity-0');
+                setTimeout(() => {
+                    messageBox.style.display = 'none'; // Hide after transition completes
+                }, 300); // Match CSS transition duration
+            }, 3000); // Message will disappear after 3 seconds
+        }
+
+        // Event listener to switch to register form
+        switchToRegisterLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
+
+        // Event listener to switch to login form
+        switchToLoginLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+
+        // Event listener for login button click
+        loginButton.addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            let hasErrors = false;
+
+            document.getElementById('username-error').textContent = '';
+            document.getElementById('password-error').textContent = '';
+
+            if (!username) {
+                document.getElementById('username-error').textContent = 'Username harus diisi';
+                hasErrors = true;
+            }
+
+            if (!password) {
+                document.getElementById('password-error').textContent = 'Password harus diisi';
+                hasErrors = true;
+            }
+
+            if (!hasErrors) {
+                // Simulate API login (replace with actual fetch() call)
+                console.log('Melakukan login dengan:', username, password);
+                showMessage(`Berhasil login dengan username: ${username}`, 'success');
+            } else {
+                showMessage('Login gagal. Harap periksa input Anda.', 'error');
+            }
+        });
+
+        // Event listener for register button click
+        registerButton.addEventListener('click', () => {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            let hasErrors = false;
+
+            document.getElementById('register-name-error').textContent = '';
+            document.getElementById('register-email-error').textContent = '';
+            document.getElementById('register-password-error').textContent = '';
+
+            if (!name) {
+                document.getElementById('register-name-error').textContent = 'Nama harus diisi';
+                hasErrors = true;
+            }
+            if (!email) {
+                document.getElementById('register-email-error').textContent = 'Email harus diisi';
+                hasErrors = true;
+            }
+            if (!password) {
+                document.getElementById('register-password-error').textContent = 'Password harus diisi';
+                hasErrors = true;
+            }
+
+            if (!hasErrors) {
+                // Simulate API register (replace with actual fetch() call)
+                console.log('Melakukan registrasi dengan:', name, email, password);
+                showMessage(`Berhasil mendaftar dengan nama: ${name} dan email: ${email}`, 'success');
+            } else {
+                showMessage('Registrasi gagal. Harap periksa input Anda.', 'error');
+            }
+        });
+
+        // Event listener for Google login button click
+        googleLoginButton.addEventListener('click', () => {
+            console.log('Memulai proses login dengan Google');
+            showMessage('Fitur Login dengan Google belum diimplementasikan. Harap gunakan tombol Login biasa.', 'error');
+        });
+    </script>
+</body>
+</x-layout>
