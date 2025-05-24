@@ -9,115 +9,254 @@
         </div>
     </x-slot:tittle>
 
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Login</h2>
-            <form action="/login" method="post" class="space-y-4">
-                @csrf
-                <div>
-                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                    <input type="email" name="email" id="email"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('email') border-red-500 @enderror"
-                           placeholder="name@example.com" autofocus required value="{{ old('email') }}">
-                    @error('email')
-                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
-                    <input type="password" name="password" id="password"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                           placeholder="password" required>
-                </div>
-                <div class="text-center">
-                    <a href="#" class="inline-block align-baseline font-semibold text-sm text-blue-500 hover:text-blue-800">
-                        Forgot Password?
-                    </a>
-                </div>
-                <button type="submit"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
-                    Login
-                </button>
-            </form>
+    <div class="container" id="login-form">
+        <h2>Login</h2>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Masukkan email Anda">
+            <div id="email-error" class="error-message"></div>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Masukkan password Anda">
+            <div id="password-error" class="error-message"></div>
+        </div>
+        <div class="form-group">
+            <button id="login-button">Login</button>
+        </div>
+        <div class="form-group">
+            <button class="google-login-button" id="google-login-button">
+                <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                    <path fill="#4285F4" d="M45.23 24.25H24v9.46h12.19c-.83 5.65-4.76 9.8-10.8 9.8-6.62 0-12-5.43-12-12s5.38-12 12-12c3.17 0 5.97 1.25 8.05 3.22l5.97-5.73c-3.44-3.14-7.9-5-13.8-5-11.05 0-20 8.95-20 20s8.95 20 20 20c11.04 0 20-8.95 20-20z"/>
+                    <path fill="#34A853" d="M24 48c13.255 0 24-10.745 24-24S37.255 0 24 0 0 10.745 0 24s10.745 24 24 24z"/>
+                    <path fill="#FBBC05" d="M24 48c6.475 0 12-2.13 15.89-5.61l-6.1-5.24c-2.45 1.6-5.56 2.55-9.79 2.55-5.38 0-9.94-3.66-11.44-8.43h-14.7v5.24c3.18 5.9 9.95 9.84 17.63 9.84z"/>
+                    <path fill="#EA4335" d="M24 0c-13.255 0-24 10.745-24 24s10.745 24 24 24c4.72 0 8.91-1.63 12.23-4.36l-6.53-5.63c-2.75 1.9-6.62 3.03-12.7 3.03-9.89 0-18-6.89-20.87-16.25H0v-5.24c3.91-7.13 11.92-12 20.87-12 5.8 0 10.98 2.27 14.73 5.97l-6.1 5.24c-3.6-2.45-8.22-3.89-14.63-3.89z"/>
+                </svg>
+                Login with Google
+            </button>
+        </div>
+        <div class="switch-form">
+            <a href="#" id="switch-to-register">Belum punya akun? Daftar di sini</a>
         </div>
     </div>
 
-    <div id="modalOverlay" class="modal-overlay"></div>
+    <div class="container" id="register-form" style="display: none;">
+        <h2>Register</h2>
+        <div class="form-group">
+            <label for="register-name">Nama</label>
+            <input type="text" id="register-name" name="name" placeholder="Masukkan nama Anda">
+            <div id="register-name-error" class="error-message"></div>
+        </div>
+        <div class="form-group">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" name="email" placeholder="Masukkan email Anda">
+            <div id="register-email-error" class="error-message"></div>
+        </div>
+        <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" name="password" placeholder="Masukkan password Anda">
+            <div id="register-password-error" class="error-message"></div>
+        </div>
+        <div class="form-group">
+            <button id="register-button">Register</button>
+        </div>
+        <div class="switch-form">
+            <a href="#" id="switch-to-login">Sudah punya akun? Login di sini</a>
+        </div>
+    </div>
 
     <div>
         {{-- Konten lain di halaman home jika ada --}}
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginButton = document.getElementById('loginBtn');
-            const loginModal = document.getElementById('loginModal');
-            const modalOverlay = document.getElementById('modalOverlay');
-            const closeButton = document.querySelector('.modal-content .close-button');
+     <script>
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const switchToRegisterLink = document.getElementById('switch-to-register');
+        const switchToLoginLink = document.getElementById('switch-to-login');
+        const loginButton = document.getElementById('login-button');
+        const registerButton = document.getElementById('register-button');
+        const googleLoginButton = document.getElementById('google-login-button');
 
-            loginButton.addEventListener('click', function() {
-                loginModal.style.display = 'block';
-                modalOverlay.style.display = 'block';
-            });
+        switchToRegisterLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
 
-            closeButton.addEventListener('click', function() {
-                loginModal.style.display = 'none';
-                modalOverlay.style.display = 'none';
-            });
+        switchToLoginLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
 
-            window.addEventListener('click', function(event) {
-                if (event.target === modalOverlay) {
-                    loginModal.style.display = 'none';
-                    modalOverlay.style.display = 'none';
-                }
-            });
+        loginButton.addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            let hasErrors = false;
+
+            document.getElementById('email-error').textContent = '';
+            document.getElementById('password-error').textContent = '';
+
+            if (!email) {
+                document.getElementById('email-error').textContent = 'Email harus diisi';
+                hasErrors = true;
+            }
+
+            if (!password) {
+                document.getElementById('password-error').textContent = 'Password harus diisi';
+                hasErrors = true;
+            }
+
+            if (!hasErrors) {
+                // Simulasi API login (ganti dengan fetch() yang sebenarnya)
+                console.log('Melakukan login dengan:', email, password);
+                alert(`Berhasil login dengan email: ${email}`);
+            }
+        });
+
+        registerButton.addEventListener('click', () => {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            let hasErrors = false;
+
+            document.getElementById('register-name-error').textContent = '';
+            document.getElementById('register-email-error').textContent = '';
+            document.getElementById('register-password-error').textContent = '';
+
+            if (!name) {
+                document.getElementById('register-name-error').textContent = 'Nama harus diisi';
+                hasErrors = true;
+            }
+            if (!email) {
+                document.getElementById('register-email-error').textContent = 'Email harus diisi';
+                hasErrors = true;
+            }
+            if (!password) {
+                document.getElementById('register-password-error').textContent = 'Password harus diisi';
+                hasErrors = true;
+            }
+
+            if (!hasErrors) {
+                // Simulasi API register (ganti dengan fetch() yang sebenarnya)
+                console.log('Melakukan registrasi dengan:', name, email, password);
+                alert(`Berhasil mendaftar dengan nama: ${name} dan email: ${email}`);
+            }
+        });
+
+        googleLoginButton.addEventListener('click', () => {
+            // Kode untuk memulai proses login dengan Google
+            console.log('Memulai proses login dengan Google');
+            alert('Fitur Login dengan Google belum diimplementasikan. Harap gunakan tombol Login biasa.');
+            // Anda akan menggunakan library seperti Google Sign-In for JavaScript untuk ini.
+            // Lihat: https://developers.google.com/identity/sign-in/web
         });
     </script>
-
 </x-layout>
 
-<style>
-    .modal-overlay {
-        display: none; /* Sembunyikan overlay secara default */
-        position: fixed; /* Tetap di viewport meskipun di-scroll */
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Latar belakang gelap semi-transparan */
-        z-index: 1000; /* Pastikan overlay di atas konten lain */
-    }
+ <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    .modal {
-        display: none; /* Sembunyikan modal secara default */
-        position: fixed; /* Tetap di viewport meskipun di-scroll */
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%); /* Posisikan di tengah */
-        z-index: 1001; /* Pastikan modal di atas overlay */
-    }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
 
-    .modal-content {
-        background-color: #fff; /* Warna latar belakang modal */
-        padding: 20px;
-        border-radius: 0.5rem; /* Sesuai dengan rounded-md */
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Sesuai dengan shadow-md */
-        width: auto; /* Biarkan lebar menyesuaikan konten */
-        max-width: 480px; /* Contoh lebar maksimum */
-        position: relative; /* Untuk memposisikan close button */
-    }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    .close-button {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        text-decoration: none;
-        cursor: pointer;
-    }
+        .form-group {
+            margin-bottom: 15px;
+        }
 
-    .close-button:hover,
-    .close-button:focus {
-        color: black;
-    }
-</style
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5c3d2e; /* Brown color */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+        }
+
+        .form-group button:hover {
+            background-color: #73513d; /* Darker brown */
+        }
+
+        .form-group .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .switch-form a {
+            color: #5c3d2e;
+            text-decoration: none;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        .google-login-button {
+            background-color: #4285f4; /* Google blue */
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .google-login-button:hover {
+            background-color: #357ae8;
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+    </style>
