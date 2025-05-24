@@ -16,9 +16,9 @@
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
-            </div>
-            <h2>Hubungi Kami</h2> 
+            </div> 
             <div class="kontak-area">
+                <h2>Hubungi Kami</h2>
                 <h2>Kontak</h2>
                 <p>Alamat: Jl. Medan Merdeka, Jakarta Pusat</p>
                 <p>Telepon: (021) 12345678</p>
@@ -66,4 +66,3 @@
         border-radius: 0.5rem;
       }
     </style>
-
