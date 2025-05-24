@@ -55,12 +55,18 @@
     <style>
         body{
             padding-top: 10rem;
+            overflow-y: hidden;
+            margin: 0;
+            padding-top: 0;
+            
         }
         .slider-container {
             width: 100%;
             height: 100vh;
             position: relative;
             overflow: hidden;
+            margin-left: calc(50% - 50vw);
+            width: 100vw;
         }
         .slider-item {
             position: absolute;
@@ -76,6 +82,7 @@
             align-items: center;
             text-align: center;
             padding: 0;
+            object-fit: cover;
         }
         .slider-item img {
             width: 100%;
