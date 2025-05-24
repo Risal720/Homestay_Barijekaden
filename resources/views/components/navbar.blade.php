@@ -4,9 +4,11 @@
         <div class="flex items-center">
           <div class="relative flex items-center">
             <div class="shrink-0">
-              <img class="size-10 mr-2" src="{{ asset('image/logo.png') }}" alt="Your Company">
+              <img class="size-10 mr-2" src="{{ asset('image/logo.png') }}" alt="Your Company">            
             </div>
-              <p class="text-[#bf7029] norican-regular">Barijekaden</p>
+              <a href="/">
+                <p class="text-[#bf7029] norican-regular">Barijekaden</p>
+              </a>
             </div>
         </div>
         <div class="flex items-center">
