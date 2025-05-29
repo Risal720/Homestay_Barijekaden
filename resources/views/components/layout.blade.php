@@ -10,7 +10,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
       body{
-        padding-top: 10rem;
+        padding-top: 4rem;
       }
     </style>
 </head>
@@ -23,7 +23,6 @@
     <div class="min-h-full">
       <x-navbar></x-navbar>
 
-      <x-header>{{ $tittle }}</x-header>
 
     
     <main>
