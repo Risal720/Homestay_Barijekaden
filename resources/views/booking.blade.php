@@ -1,4 +1,5 @@
 <x-controlpanel>
+
     <x-slot:tittle>{{ $tittle }}</x-slot:tittle> 
     <!DOCTYPE html>
 <html lang="en">
@@ -269,6 +270,7 @@
                 <p id="numGuestsError" class="error-message hidden"></p>
             </div>
 
+
             <div class="form-group">
                 <label for="notes">Notes</label>
                 <textarea id="notes" name="notes" rows="4" placeholder=""></textarea>
@@ -300,7 +302,6 @@
                     errorElement.classList.remove('hidden');
                     element.classList.add('border-red-500');
                 }
-            }
 
             function hideError(element) {
                 const errorElement = document.getElementById(element.id + 'Error');
@@ -308,7 +309,6 @@
                     errorElement.classList.add('hidden');
                     element.classList.remove('border-red-500');
                 }
-            }
 
             // --- Populate Year Dropdown ---
             function populateYears() {
@@ -352,7 +352,8 @@
             form.addEventListener('submit', async function(event) {
                 event.preventDefault();
 
-                let isValid = true;
+                    let isValid = true;
+
 
                 // Reset errors
                 hideError(firstNameInput);
@@ -444,9 +445,7 @@
                         console.error('Error submitting booking:', error);
                         alert('Terjadi kesalahan saat mengirim permintaan pemesanan. Silakan coba lagi.');
                     }
-                } else {
-                    alert('Harap lengkapi semua kolom yang wajib diisi dengan benar.');
-                }
+                });
             });
         });
     </script>

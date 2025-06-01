@@ -1,58 +1,61 @@
 <x-layout>
-  <x-slot:tittle>{{ $tittle }}</x-slot:tittle>
-        <main>
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <div class="slider-container">
-                    <div class="slider-item active">
-                        <img src="image/fasilitasimg/kolam.png" alt="Kolam Renang">
-                        <div class="text-container">
-                            <h2 class="slider-title">Kolam Renang</h2>
-                            <p class="slider-description">
-                                Rasakan kesegaran tiada duanya di kolam renang kami yang dirancang untuk
-                                relaksasi dan kenyamanan maksimal—tempat sempurna melepas penat setelah
-                                seharian beraktivitas.
-                            </p>
-                            <a href="#" class="slider-button show-details-button" data-facility-id="kolam-renang">Lihat Selengkapnya</a>
-                        </div>
+    <main>
+        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <div class="slider-container">
+                <div class="slider-item active">
+                    <img src="image/fasilitasimg/kolam.png" alt="Kolam Renang">
+                    <div class="text-container">
+                        <h2 class="slider-title">Kolam Renang</h2>
+                        <p class="slider-description">
+                            Rasakan kesegaran tiada duanya di kolam renang kami yang dirancang untuk
+                            relaksasi dan kenyamanan maksimal—tempat sempurna melepas penat setelah
+                            seharian beraktivitas.
+                        </p>
+                        <a href="#" class="slider-button show-details-button" data-facility-id="kolam-renang">Lihat
+                            Selengkapnya</a>
                     </div>
-                    <div class="slider-item">
-                        <img src="image/fasilitasimg/meetingroom.png" alt="Ruang Rapat">
-                        <div class="text-container">
-                            <h2 class="slider-title">Ruang Rapat</h2>
-                            <p class="slider-description">
-                                Temukan standar baru untuk pertemuan profesional dengan ruang rapat
-                                kami yang dapat disesuaikan untuk segala kebutuhan bisnis Anda.
-                            </p>
-                            <a href="#" class="slider-button show-details-button" data-facility-id="ruang-rapat">Lihat Selengkapnya</a>
-                        </div>
+                </div>
+                <div class="slider-item">
+                    <img src="image/fasilitasimg/meetingroom.png" alt="Ruang Rapat">
+                    <div class="text-container">
+                        <h2 class="slider-title">Ruang Rapat</h2>
+                        <p class="slider-description">
+                            Temukan standar baru untuk pertemuan profesional dengan ruang rapat
+                            kami yang dapat disesuaikan untuk segala kebutuhan bisnis Anda.
+                        </p>
+                        <a href="#" class="slider-button show-details-button" data-facility-id="ruang-rapat">Lihat
+                            Selengkapnya</a>
                     </div>
-                    <div class="slider-item">
-                        <img src="image/fasilitasimg/parkiran.png" alt="Area Parkir">
-                        <div class="text-container">
-                            <h2 class="slider-title">Area Parkir</h2>
-                            <p class="slider-description">
-                                Fasilitas parkir luas, aman, dan bebas biaya—karena kenyamanan Anda
-                                adalah prioritas kami sejak langkah pertama.
-                            </p>
-                            <a href="#" class="slider-button show-details-button" data-facility-id="area-parkir">Lihat Selengkapnya</a>
-                        </div>
+                </div>
+                <div class="slider-item">
+                    <img src="image/fasilitasimg/parkiran.png" alt="Area Parkir">
+                    <div class="text-container">
+                        <h2 class="slider-title">Area Parkir</h2>
+                        <p class="slider-description">
+                            Fasilitas parkir luas, aman, dan bebas biaya—karena kenyamanan Anda
+                            adalah prioritas kami sejak langkah pertama.
+                        </p>
+                        <a href="#" class="slider-button show-details-button" data-facility-id="area-parkir">Lihat
+                            Selengkapnya</a>
                     </div>
-                    <div class="slider-item">
-                        <img src="image/fasilitasimg/gazebo.png" alt="Gazebo">
-                        <div class="text-container">
-                            <h2 class="slider-title">Gazebo</h2>
-                            <p class="slider-description">
-                                Santai sejenak di gazebo nyaman kami — tempat asyik buat ngopi, ngobrol,
-                                atau sekadar menikmati angin sepoi-sepoi dan suasana tenang di tengah
-                                hotel yang bikin betah.
-                            </p>
-                            <a href="#" class="slider-button show-details-button" data-facility-id="gazebo">Lihat Selengkapnya</a>
-                        </div>
+                </div>
+                <div class="slider-item">
+                    <img src="image/fasilitasimg/gazebo.png" alt="Gazebo">
+                    <div class="text-container">
+                        <h2 class="slider-title">Gazebo</h2>
+                        <p class="slider-description">
+                            Santai sejenak di gazebo nyaman kami — tempat asyik buat ngopi, ngobrol,
+                            atau sekadar menikmati angin sepoi-sepoi dan suasana tenang di tengah
+                            hotel yang bikin betah.
+                        </p>
+                        <a href="#" class="slider-button show-details-button" data-facility-id="gazebo">Lihat
+                            Selengkapnya</a>
                     </div>
                 </div>
             </div>
-        </main>
-        <div class="modal-overlay" id="facilityDetailModal">
+        </div>
+    </main>
+    <div class="modal-overlay" id="facilityDetailModal">
         <div class="modal-content">
             <button class="modal-close-button" id="closeModalButton">&times;</button>
             <h3 class="modal-title" id="modalTitle"></h3>
@@ -60,12 +63,13 @@
         </div>
     </div>
     <style>
-        body{
+        body {
             padding-top: 10rem;
             overflow-y: hidden;
             margin: 0;
-            padding-top: 0;   
+            padding-top: 0;
         }
+
         .slider-container {
             width: 100%;
             height: 100vh;
@@ -74,6 +78,7 @@
             margin-left: calc(50% - 50vw);
             width: 100vw;
         }
+
         .slider-item {
             position: absolute;
             top: 0;
@@ -90,18 +95,22 @@
             padding: 0;
             object-fit: cover;
         }
+
         .slider-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
+
         .slider-item.active {
             opacity: 1;
             z-index: 1;
         }
-        .text-container{
+
+        .text-container {
             padding-bottom: 50px;
         }
+
         .slider-title {
             color: white;
             font-size: 2.5rem;
@@ -111,6 +120,7 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             text-align: right;
         }
+
         .slider-description {
             color: white;
             font-size: 1rem;
@@ -121,6 +131,7 @@
             margin-right: 0;
             text-align: right;
         }
+
         .slider-button {
             background-color: #4caf50;
             color: white;
@@ -133,9 +144,11 @@
             text-decoration: none;
             text-align: right;
         }
+
         .slider-button:hover {
             background-color: #45a049;
         }
+
         /* Gaya untuk Modal */
         .modal-overlay {
             position: fixed;
@@ -143,19 +156,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Latar belakang gelap transparan */
+            background-color: rgba(0, 0, 0, 0.7);
+            /* Latar belakang gelap transparan */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 2000; /* Pastikan di atas semua konten */
+            z-index: 2000;
+            /* Pastikan di atas semua konten */
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
+
         .modal-overlay.active {
             opacity: 1;
             visibility: visible;
         }
+
         .modal-content {
             background-color: white;
             padding: 2rem;
@@ -164,12 +181,15 @@
             width: 90%;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             position: relative;
-            transform: translateY(20px); /* Efek masuk */
+            transform: translateY(20px);
+            /* Efek masuk */
             transition: transform 0.3s ease;
         }
+
         .modal-overlay.active .modal-content {
             transform: translateY(0);
         }
+
         .modal-close-button {
             position: absolute;
             top: 1rem;
@@ -181,21 +201,25 @@
             color: #6b7280;
             transition: color 0.2s ease;
         }
+
         .modal-close-button:hover {
             color: #1f2937;
         }
+
         .modal-title {
             font-size: 2rem;
             font-weight: 700;
             color: #1f2937;
             margin-bottom: 1rem;
         }
+
         .modal-description {
             font-size: 1rem;
             color: #4b5563;
             line-height: 1.6;
             margin-bottom: 1.5rem;
         }
+
         .slider-item .text-container {
             position: absolute;
             bottom: 2rem;
@@ -295,7 +319,8 @@
             showDetailsButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     event.preventDefault(); // Mencegah navigasi default link
-                    const facilityId = this.dataset.facilityId; // Ambil ID fasilitas dari data-attribute
+                    const facilityId = this.dataset
+                    .facilityId; // Ambil ID fasilitas dari data-attribute
                     openModal(facilityId);
                 });
             });
