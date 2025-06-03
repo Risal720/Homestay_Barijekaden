@@ -13,18 +13,18 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->string('foto_logo')->nullable(); // Untuk foto logo/thumbnail di halaman daftar
+            $table->string('foto_logo')->nullable(); // Thumbnail/main image path (stores filename)
             $table->string('nama_room');
             $table->decimal('harga_room', 10, 2);
             $table->string('slug')->unique();
-            $table->text('detail_room');
+            $table->text('detail_room')->nullable();
             $table->timestamps();
         });
 
         Schema::create('room_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('room_id')->constrained()->onDelete('cascade'); // Relasi ke tabel rooms
-            $table->string('path'); // Path atau nama file foto detail
+            $table->string('path'); // Path atau nama file foto detail (stores filename)
             $table->string('alt_text')->nullable(); // Teks alternatif untuk SEO
             $table->integer('order')->default(0); // Untuk mengatur urutan tampilan foto
             $table->timestamps();

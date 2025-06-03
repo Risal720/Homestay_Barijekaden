@@ -1,19 +1,19 @@
 <x-layout>
     <div class="bg-white rounded-md shadow-md overflow-hidden room-card">
         <div class="grid grid-cols-1 md:grid-cols-2">
-            {{-- Bagian Kiri: Area Foto --}}
+            {{-- Left Section: Photo Area (Carousel) --}}
             <div class="bg-gray-200 relative aspect-w-16 aspect-h-9 overflow-hidden">
-                @if ($room->images->isNotEmpty())
+                @if ($room->roomImages->isNotEmpty())
                     <div class="carousel-container absolute top-0 left-0 w-full h-full">
-                        @foreach ($room->images as $image)
-                            <div class="carousel-slide absolute top-0 left-0 w-full h-full transition-opacity duration-500 opacity-0"
-                                style="opacity: 1;">
+                        @foreach ($room->roomImages as $index => $image)
+                            <div class="carousel-slide absolute top-0 left-0 w-full h-full transition-opacity duration-500 opacity-0 {{ $index === 0 ? 'opacity-100' : '' }}"
+                                data-slide-index="{{ $index }}">
                                 <img src="{{ $image->path }}" alt="{{ $image->alt_text }}"
                                     class="object-cover w-full h-full">
                             </div>
                         @endforeach
                         <button
-                            class="absolute top-1/2 left-2 sm:left-4 transform -translate-y-1/2  bg-opacity-50 text-white rounded-full w-8 h-8 flex justify-center items-center focus:outline-none"
+                            class="absolute top-1/2 left-2 sm:left-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex justify-center items-center focus:outline-none"
                             onclick="prevSlide()">
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -21,7 +21,7 @@
                             </svg>
                         </button>
                         <button
-                            class="absolute top-1/2 right-2 sm:right-4 transform -translate-y-1/2 bg-opacity-50 text-white rounded-full w-8 h-8 flex justify-center items-center focus:outline-none"
+                            class="absolute top-1/2 right-2 sm:right-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex justify-center items-center focus:outline-none"
                             onclick="nextSlide()">
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -29,13 +29,14 @@
                             </svg>
                         </button>
                         <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                            @foreach ($room->images as $index => $image)
-                                <button class="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gray-300 focus:outline-none"
+                            @foreach ($room->roomImages as $index => $image)
+                                <button class="w-2 h-2 sm:w-3 sm:h-3 rounded-full {{ $index === 0 ? 'bg-gray-600' : 'bg-gray-300' }} focus:outline-none"
                                     onclick="goToSlide({{ $index }})"></button>
                             @endforeach
                         </div>
                     </div>
                 @else
+                    {{-- Placeholder if no detail images --}}
                     <div class="bg-blue-500 inset-0 flex items-center justify-center">
                         <div class="bg-brown-300 p-8 rounded-md">
                             <div class="relative">
@@ -54,7 +55,7 @@
                 @endif
             </div>
 
-            {{-- Bagian Kanan: Informasi Singkat --}}
+            {{-- Right Section: Brief Information --}}
             <div class="p-6">
                 <div class="mb-2">
                     <div class="bg-pink-300 text-white py-2 px-4 rounded-md inline-block">{{ $room->nama_room }}</div>
@@ -76,34 +77,44 @@
                             {{ $room->rating }}
                         </button>
                     @else
-                        <div></div> {{-- Placeholder jika tidak ada rating --}}
+                        <div></div> {{-- Placeholder if no rating --}}
                     @endif
                     <button class="bg-green-400 text-white py-2 px-4 rounded-md">PESAN</button>
                 </div>
                 <div class="grid grid-cols-5 gap-2 mb-4">
-                    @for ($i = 1; $i <= 20; $i++)
+                    @forelse ($room->roomCodes as $roomCode)
                         @php
-                            $tersedia = in_array('A' . $i, ['A12', 'A14', 'A18']) ? 'bg-purple-600' : 'bg-teal-400';
+                            $statusClass = '';
+                            if ($roomCode->status == 'Tersedia') {
+                                $statusClass = 'bg-teal-400';
+                            } elseif ($roomCode->status == 'Tidak Tersedia') {
+                                $statusClass = 'bg-blue-500';
+                            }
+                            // 'Yang Dipilih' status is handled client-side and not from admin
                         @endphp
                         <button
-                            class="{{ $tersedia }} text-white py-2 px-3 rounded-md text-xs">A{{ $i }}</button>
-                    @endfor
+                            class="{{ $statusClass }} text-white py-2 px-3 rounded-md text-xs">{{ $roomCode->code }}</button>
+                    @empty
+                        <p class="col-span-5 text-gray-500 text-sm">Tidak ada kode kamar yang tersedia untuk kamar ini.</p>
+                    @endforelse
                 </div>
                 <div class="flex items-center space-x-4">
-                    <div class="w-4 h-4 bg-pink-500 rounded-full"></div>
+                    <div class="w-4 h-4 bg-teal-400 rounded-full"></div>
                     <span class="text-xs">Tersedia</span>
                     <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
                     <span class="text-xs">Tidak Tersedia</span>
+                    <div class="w-4 h-4 bg-purple-600 rounded-full"></div>
+                    <span class="text-xs">Yang Dipilih</span>
                 </div>
             </div>
         </div>
 
-        {{-- Bagian Bawah: Detail Lengkap --}}
+        {{-- Bottom Section: Full Details --}}
         <div class="mt-4 bg-cyan-500 p-8 text-center relative">
             <div class="room-full-details text-gray-700">
                 <h3 class="font-semibold text-lg mb-2">Detail Lengkap</h3>
                 <p>{{ $room->detail_room ?? 'Ini adalah detail lengkap untuk kamar ini...' }}</p>
-                {{-- Anda bisa menambahkan detail fasilitas di sini jika ada --}}
+                {{-- You can add facility details here if available --}}
             </div>
         </div>
     </div>
@@ -121,7 +132,8 @@
 
         function showSlide(index) {
             slides.forEach((slide, i) => {
-                slide.style.opacity = i === index ? 1 : 0;
+                slide.classList.toggle('opacity-100', i === index);
+                slide.classList.toggle('opacity-0', i !== index);
             });
             indicators.forEach((indicator, i) => {
                 indicator.classList.toggle('bg-gray-600', i === index);
@@ -144,6 +156,11 @@
             showSlide(currentIndex);
         }
 
-        showSlide(currentIndex);
+        // Initialize carousel
+        document.addEventListener('DOMContentLoaded', () => {
+            if (slides.length > 0) {
+                showSlide(currentIndex);
+            }
+        });
     </script>
 </x-layout>

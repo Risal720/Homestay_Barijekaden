@@ -2,7 +2,6 @@
     <style>
         .body {
             overflow-x: hidden;
-
         }
 
         .side-photo {
@@ -36,7 +35,6 @@
             border-radius: 0.5rem;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
-            /* Atur jarak antar card di sini */
             padding: 1rem;
             display: grid;
             grid-template-columns: 200px 1fr auto;
@@ -46,7 +44,7 @@
         }
 
         .room-image {
-            background-color: #90ee90;
+            background-color: #90ee90; /* Placeholder background */
             aspect-ratio: 16 / 9;
             display: flex;
             justify-content: center;
@@ -54,7 +52,14 @@
             color: #333;
             font-size: 0.8rem;
             border-radius: 0.25rem;
+            overflow: hidden; /* Ensure image fits */
         }
+        .room-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the area without distortion */
+        }
+
 
         .room-details {
             display: grid;
@@ -135,7 +140,7 @@
             transition: transform 0.3s ease-in-out;
         }
 
-        /* Responsive untuk layar yang lebih kecil */
+        /* Responsive for smaller screens */
         @media (max-width: 768px) {
             .side-photo {
                 display: none;
@@ -173,20 +178,19 @@
                 <div class="room-card relative">
                     <div class="room-image">
                         @if ($room->foto_logo)
-                            <img src="{{ asset('image/logos/' . $room->foto_logo) }}"
-                                alt="Logo {{ $room->nama_room }}" style="max-width: 100%; max-heigt: 100%;">
+                            <img src="{{ $room->foto_logo }}"
+                                alt="Foto Logo {{ $room->nama_room }}">
                         @else
-                            Logo Tidak Tersedia
+                            <span class="text-gray-500">Tidak ada gambar</span>
                         @endif
-
                     </div>
                     <div class="room-details">
                         <div class="room-name">{{ $room->nama_room }}</div>
-                        <div class="room-info">{{-- Anda bisa menambahkan informasi rating di sini jika ada --}}</div>
+                        <div class="room-info">{{-- You can add rating information here if available --}}</div>
                     </div>
                     <div class="price-button-container">
                         <div class="room-price">Rp {{ number_format($room->harga_room, 0, ',', '.') }}</div>
-                        <a href="/rooms/{{ $room->slug }}" class="book-button">LIHAT DETAIL</a>
+                        <a href="{{ route('rooms.show', $room->slug) }}" class="book-button">LIHAT DETAIL</a>
                     </div>
                     <div class="hidden room-full-details ">
                         <p>
@@ -226,15 +230,3 @@
     </script>
 
 </x-layout>
-
-
-{{-- <article class="py-8 max-w-screen-md border-b border-gray-300">
-    <a href="/rooms/{{ $room['slug'] }}" class="hover:underline">
-      <h2 class="mb-1 text-3xl tracking-tight font-bold text-gray-900">{{ $room['tittle'] }}</h2>
-    </a>
-    <div class="text-base text-gray-500">
-      <a href="#">{{ $room['author'] }}</a> |{{ $room->created_at->diffForHumans()}}
-    </div>
-    <p class="my-4 font-light">{{ Str::limit($room['body'],150) }}</p>
-    <a href="/rooms/{{ $room['slug'] }}" class="font-medium text-blue-500 hover:underline">Read more &raquo;</a>
-  </article> --}}
