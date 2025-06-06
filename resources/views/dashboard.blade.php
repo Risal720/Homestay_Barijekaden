@@ -1,5 +1,7 @@
 <x-controlpanel>
-    <x-slot:title>{{ $tittle }}</x-slot:title>
+    <x-slot:title>{{ $title }}</x-slot:title>
+
+    <p>Ini dashboard</p>
 
     <div class="dashboard">
         <!-- Ringkasan Data & Statistik -->
@@ -30,8 +32,10 @@
         <!-- Manajemen Pengguna & Profil -->
         <section class="user-management">
             <h2>Profil Pengguna</h2>
-            <p>Nama: {{ Auth::user()->name }}</p>
-            <a href="{{ route('profile.settings') }}" class="btn">Pengaturan Akun</a>
+            @auth
+                <p>Nama: {{ Auth::user()->name }}</p>
+                <a href="{{ route('profile.settings') }}" class="btn">Pengaturan Akun</a>
+            @endauth
         </section>
 
         <!-- Tools & Fitur Khusus -->
