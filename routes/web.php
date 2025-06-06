@@ -60,7 +60,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('room-codes/{roomCode}/status', [AdminRoomController::class, 'updateRoomCodeStatus'])->name('room_codes.update_status');
     Route::delete('room-codes/{roomCode}', [AdminRoomController::class, 'deleteRoomCode'])->name('room_codes.destroy');
 
-    Route::resource('rooms', AdminRoomController::class); // Route::resource harus di bawah rute spesifik
+    // Pastikan rute ini berada DI ATAS Route::resource('rooms', AdminRoomController::class);
+    Route::get('rooms/{room}/room-codes', [AdminRoomController::class, 'getRoomCodes'])->name('rooms.get_room_codes');
+
+    Route::resource('rooms', AdminRoomController::class); // Route::resource harus di bawah rute spesifik yang spesifik
 
     Route::delete('room-images/{roomImage}', [AdminRoomController::class, 'deleteRoomImage'])->name('room_images.destroy');
     Route::post('room-prefixes', [AdminRoomController::class, 'storeOrUpdatePrefix'])->name('room_prefixes.store_update');

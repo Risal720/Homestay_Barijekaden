@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File; // Import File facade
+use Illuminate\Support\Facades\Log; // Import the Log facade
 
 class AdminRoomController extends Controller
 {
@@ -66,7 +67,7 @@ class AdminRoomController extends Controller
                 $filename = $image->hashName(); // Generate a unique filename
                 // Store directly in public/image/details
                 $image->move(public_path('image/details'), $filename);
-                
+
                 RoomImage::create([
                     'room_id' => $room->id,
                     'path' => $filename, // Store only the filename here
@@ -85,17 +86,18 @@ class AdminRoomController extends Controller
 
         if ($roomPrefix->next_number <= $roomPrefix->max_limit) {
             $code = $prefix . '-' . str_pad($roomPrefix->next_number, 3, '0', STR_PAD_LEFT);
-            RoomCode::create([
+            $newRoomCode = RoomCode::create([ // Capture the created model
                 'room_id' => $room->id,
                 'code' => $code,
                 'status' => 'Tersedia',
             ]);
             $roomPrefix->increment('next_number');
+            // Return JSON for AJAX, including the newly created code's data
+            return response()->json(['success' => true, 'message' => 'Kode kamar baru ' . $code . ' berhasil ditambahkan.', 'code' => $newRoomCode]);
         } else {
-            return redirect()->route('admin.rooms.index')->with('error', 'Batas maksimal kode kamar untuk awalan ' . $prefix . ' telah tercapai.');
+            // Return JSON for AJAX
+            return response()->json(['success' => false, 'message' => 'Batas maksimal kode kamar untuk awalan ' . $prefix . ' telah tercapai.']);
         }
-
-        return redirect()->route('admin.rooms.index')->with('success', 'Kamar berhasil ditambahkan!');
     }
 
     /**
@@ -143,7 +145,7 @@ class AdminRoomController extends Controller
             foreach ($request->file('room_images') as $index => $image) {
                 $filename = $image->hashName();
                 $image->move(public_path('image/details'), $filename); // Store in public/image/details
-                
+
                 RoomImage::create([
                     'room_id' => $room->id,
                     'path' => $filename, // Store only the filename here
@@ -198,8 +200,17 @@ class AdminRoomController extends Controller
     /**
      * Add a new room code for a given room and prefix.
      */
-    public function addRoomCode(Request $request, Room $room)
+    public function addRoomCode(Request $request, $roomId) // Modified to accept $roomId directly
     {
+        // Temporarily bypass implicit model binding for debugging
+        $room = Room::find($roomId);
+
+        if (!$room) {
+            // Log this error if the room is not found
+            Log::error("Room with ID {$roomId} not found for addRoomCode method.");
+            return response()->json(['success' => false, 'message' => 'Kamar tidak ditemukan.'], 404);
+        }
+
         $request->validate([
             'prefix_add' => 'required|string|max:10',
         ]);
@@ -288,5 +299,20 @@ class AdminRoomController extends Controller
         }
         $roomPrefix->delete();
         return back()->with('success', 'Awalan kamar berhasil dihapus.');
+    }
+
+    // Di AdminRoomController.php
+    public function getRoomCodes($roomId) // Modified to accept $roomId directly
+    {
+        // Temporarily bypass implicit model binding for debugging
+        $room = Room::find($roomId); 
+
+        if (!$room) {
+            // Log this error if the room is not found
+            Log::error("Room with ID {$roomId} not found for getRoomCodes method.");
+            return response()->json(['error' => 'Kamar tidak ditemukan.'], 404);
+        }
+
+        return response()->json($room->roomCodes);
     }
 }

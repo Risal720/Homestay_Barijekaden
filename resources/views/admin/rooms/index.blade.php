@@ -9,7 +9,7 @@
     <!-- Form Tambah Kamar Baru -->
     <div class="mb-10 p-6 bg-blue-50 rounded-lg border border-blue-200">
         <h2 class="text-2xl font-bold text-blue-800 mb-4">Tambah Kamar Baru</h2>
-        <form action="{{ route('admin.rooms.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form id="addRoomForm" action="{{ route('admin.rooms.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @csrf
             <div>
                 <label for="nama_room" class="block text-sm font-medium text-gray-700 mb-1">Nama Kamar</label>
@@ -52,7 +52,7 @@
                     onchange="previewMultipleImages(event, 'room_images-preview-container')">
                 @error('room_images.*') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="room_images-preview-container">
-                    </div>
+                </div>
             </div>
             <div>
                 <label for="prefix" class="block text-sm font-medium text-gray-700 mb-1">Awalan Kode Kamar (misal: A, B, DELUXE)</label>
@@ -173,13 +173,15 @@
                     @empty
                         <tr>
                             <td colspan="6" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">Belum ada kamar yang ditambahkan.</td>
-                        </tr>
+                            </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+{{-- The Message Modal HTML has been removed as per your request. --}}
 
 <div id="roomCodeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
     <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
@@ -226,6 +228,9 @@
 
 
 <script>
+    // Log untuk memastikan skrip ini dimuat dan dieksekusi
+    console.log('admin/rooms/index.blade.php script loaded.');
+
     // JavaScript for single image preview (foto_logo)
     function previewImage(event, previewId) {
         const reader = new FileReader();
@@ -273,17 +278,19 @@
 
     // Modified openRoomCodeModal to accept base URLs
     function openRoomCodeModal(roomId, updateStatusUrl, deleteCodeUrl) {
+        // Ensure $rooms is available and parsed correctly from Blade
         const roomsData = @json($rooms->keyBy('id') ?? []);
+        console.log('roomsData yang diterima:', roomsData); // Debugging: Lihat data kamar yang diterima
         const selectedRoom = roomsData[roomId];
+        console.log('selectedRoom:', selectedRoom); // Debugging: Lihat kamar yang dipilih
 
         if (selectedRoom) {
             modalRoomName.textContent = selectedRoom.nama_room;
             modalRoomId.value = selectedRoom.id;
             // Set the action for adding a new code
-            // Menggunakan URL langsung untuk debugging
-            const addCodeUrl = `/admin/rooms/${selectedRoom.id}/add-code`; // Perubahan di sini!
+            const addCodeUrl = `/admin/rooms/${selectedRoom.id}/add-code`;
             addRoomCodeForm.action = addCodeUrl;
-            console.log(`URL untuk menambahkan kode kamar: ${addCodeUrl}`); // Tambahan console.log
+            console.log(`URL untuk menambahkan kode kamar: ${addCodeUrl}`);
 
             // Store the base URLs for dynamic use
             updateStatusBaseUrl = updateStatusUrl;
@@ -291,12 +298,17 @@
 
             currentRoomButton = document.querySelector(`button[onclick*="openRoomCodeModal(${roomId})"]`);
 
+            // Initial population of currentRoomCodes
             currentRoomCodes = JSON.parse(JSON.stringify(selectedRoom.room_codes)).reduce((acc, code) => {
                 acc[code.id] = code;
                 return acc;
             }, {});
+            console.log('currentRoomCodes after initial population:', currentRoomCodes); // New log
             renderRoomCodes(Object.values(currentRoomCodes));
             roomCodeModal.classList.remove('hidden');
+        } else {
+            console.error('Error!', `Kamar dengan ID ${roomId} tidak ditemukan. Pastikan kamar sudah ada di database.`);
+            return; // Prevent further execution if room is not found
         }
     }
 
@@ -309,6 +321,7 @@
     }
 
     function renderRoomCodes(codes) {
+        console.log('renderRoomCodes called with codes:', codes); // New log
         roomCodesList.innerHTML = '';
         if (codes.length === 0) {
             roomCodesList.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada kode kamar untuk kamar ini.</p>';
@@ -316,6 +329,11 @@
         }
 
         codes.forEach(code => {
+            // Add check for valid code object structure
+            if (!code || !code.id || !code.code || code.status === undefined) {
+                console.error('Skipping malformed room code object:', code);
+                return; // Skip rendering this malformed object
+            }
             const codeDiv = document.createElement('div');
             codeDiv.id = `room-code-item-${code.id}`;
             codeDiv.classList.add('flex', 'items-center', 'justify-between', 'p-2', 'bg-gray-50', 'rounded-md', 'border', 'border-gray-200', 'mb-2');
@@ -323,7 +341,7 @@
                 <span class="font-semibold text-gray-800">${code.code}</span>
                 <form action="${updateStatusBaseUrl.replace('CODE_ID_PLACEHOLDER', code.id)}" method="POST" class="flex items-center space-x-2 room-code-status-form">
                     @csrf
-                    <select name="status" onchange="this.form.submit()" class="block w-full py-1 px-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <select name="status" class="block w-full py-1 px-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="Tersedia" ${code.status == 'Tersedia' ? 'selected' : ''}>Tersedia</option>
                         <option value="Tidak Tersedia" ${code.status == 'Tidak Tersedia' ? 'selected' : ''}>Tidak Tersedia</option>
                     </select>
@@ -336,6 +354,105 @@
             `;
             roomCodesList.appendChild(codeDiv);
         });
+
+        // Add event listeners to the newly rendered select elements
+        roomCodesList.querySelectorAll('select[name="status"]').forEach(selectElement => {
+            selectElement.addEventListener('change', function(event) {
+                const form = event.target.closest('form');
+                const formData = new FormData(form);
+                const url = form.action;
+                const method = 'POST';
+                const roomCodeId = parseInt(url.split('/').slice(-2, -1)[0]); 
+
+                console.log(`Mengirim permintaan AJAX: ${method} ${url}`);
+
+                fetch(url, {
+                    method: method,
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => {
+                    console.log(`Status respons untuk ${url}: ${response.status}`);
+                    console.log(`Content-Type respons untuk ${url}: ${response.headers.get('content-type')}`);
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text) });
+                    }
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        return response.json();
+                    } else {
+                        return response.text().then(text => {
+                            console.error('Respons non-JSON diterima:', text);
+                            throw new Error('Respons bukan JSON. Detail: ' + text.substring(0, 100) + '...');
+                        });
+                    }
+                })
+                .then(data => {
+                    console.log('Data diterima (pembaruan status):', data);
+                    try {
+                        if (data.success) {
+                            console.log('roomCodeId:', roomCodeId);
+                            console.log('currentRoomCodes SEBELUM mengambil kode yang diperbarui:', currentRoomCodes);
+
+                            const currentRoomId = modalRoomId.value;
+                            const fetchRoomCodesUrl = `/admin/rooms/${currentRoomId}/room-codes`; 
+                            console.log('Mengambil kode kamar yang diperbarui dari:', fetchRoomCodesUrl);
+                            
+                            fetch(fetchRoomCodesUrl)
+                                .then(response => {
+                                    console.log(`Status respons untuk ${fetchRoomCodesUrl}: ${response.status}`);
+                                    console.log(`Content-Type respons untuk ${fetchRoomCodesUrl}: ${response.headers.get('content-type')}`);
+                                    if (!response.ok) {
+                                        return response.text().then(text => { throw new Error('Gagal mengambil kode kamar terbaru. Detail: ' + text.substring(0, 100) + '...') });
+                                    }
+                                    const contentType = response.headers.get('content-type');
+                                    if (contentType && contentType.includes('application/json')) {
+                                        return response.json();
+                                    } else {
+                                        return response.text().then(text => {
+                                            console.error('Respons non-JSON diterima saat mengambil kode yang diperbarui:', text);
+                                            throw new Error('Respons bukan JSON saat mengambil kode terbaru. Detail: ' + text.substring(0, 100) + '...');
+                                        });
+                                    }
+                                })
+                                .then(updatedRoomCodes => {
+                                    console.log('Kode kamar yang diperbarui diambil dari server:', updatedRoomCodes);
+                                    currentRoomCodes = updatedRoomCodes.reduce((acc, code) => {
+                                        acc[code.id] = code;
+                                        return acc;
+                                    }, {});
+                                    console.log('currentRoomCodes dibangun ulang dari data yang diambil:', currentRoomCodes);
+                                    renderRoomCodes(Object.values(currentRoomCodes));
+                                    refreshRoomCodeDisplay();
+                                    console.log('Berhasil!', data.message);
+                                })
+                                .catch(fetchError => {
+                                    console.error('Error mengambil kode kamar yang diperbarui:', fetchError);
+                                    console.error('Error!', 'Status berhasil diperbarui, tetapi gagal memuat daftar kode kamar terbaru. Periksa konsol untuk detail.');
+                                });
+
+                        } else {
+                            console.error('Gagal!', data.message || 'Gagal memperbarui status kode kamar.');
+                        }
+                    } catch (innerError) {
+                        console.error('Error internal dalam blok .then yang berhasil (pembaruan status):', innerError);
+                        console.error('Error!', 'Terjadi kesalahan internal saat memperbarui tampilan. Periksa konsol.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saat fetch atau pemrosesan respons awal (pembaruan status):', error);
+                    let errorMessage = 'Terjadi kesalahan saat memperbarui status kode kamar. Periksa konsol untuk detail.';
+                    if (error.message && error.message.includes('<!DOCTYPE html>')) {
+                        errorMessage += ' Server mengembalikan halaman HTML (mungkin 404 Not Found atau error server).';
+                    } else {
+                        errorMessage += ' ' + error.message;
+                    }
+                    console.error('Error!', errorMessage);
+                });
+            });
+        });
     }
 
     function refreshRoomCodeDisplay() {
@@ -346,14 +463,73 @@
         }
     }
 
+    // Event listener for the main "Tambah Kamar" form
+    document.addEventListener('DOMContentLoaded', function() {
+        const addRoomForm = document.getElementById('addRoomForm');
+        if (addRoomForm) {
+            addRoomForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // Mencegah pengiriman formulir default
+
+                const form = e.target;
+                const formData = new FormData(form);
+                const url = form.action;
+                const method = 'POST';
+
+                console.log(`Mengirim permintaan AJAX untuk Tambah Kamar: ${method} ${url}`);
+
+                fetch(url, {
+                    method: method,
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => {
+                    console.log(`Status respons untuk ${url}: ${response.status}`);
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text) });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Data diterima (Tambah Kamar):', data);
+                    if (data.success) {
+                        console.log('Berhasil!', data.message);
+                        // Mengarahkan ke halaman indeks kamar setelah penambahan berhasil
+                        window.location.href = "{{ route('admin.rooms.index') }}";
+                    } else {
+                        console.error('Gagal!', data.message || 'Gagal menambahkan kamar.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saat fetch atau pemrosesan respons (Tambah Kamar):', error);
+                    let errorMessage = 'Terjadi kesalahan saat menambahkan kamar. Periksa konsol untuk detail.';
+                    if (error.message && error.message.includes('<!DOCTYPE html>')) {
+                        errorMessage += ' Server mengembalikan halaman HTML (mungkin 404 Not Found atau error server).';
+                    } else {
+                        errorMessage += ' ' + error.message;
+                    }
+                    console.error('Error!', errorMessage);
+                });
+            });
+        } else {
+            console.error('Elemen formulir dengan ID "addRoomForm" tidak ditemukan.');
+        }
+    });
+
+    // Event listener for the "Tambah Kode" form inside the modal
+    // This listener is outside DOMContentLoaded because addRoomCodeForm is a static element
+    // and its listener should be attached as soon as the script runs.
     addRoomCodeForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+        console.log('addRoomCodeForm submit event triggered.'); // NEW LOG: Konfirmasi pemicuan event
+        e.preventDefault(); // Mencegah pengiriman formulir default
+
         const form = e.target;
         const formData = new FormData(form);
         const url = form.action;
         const method = 'POST';
 
-        console.log(`Sending AJAX request: ${method} ${url}`);
+        console.log(`Mengirim permintaan AJAX untuk Tambah Kode: ${method} ${url}`);
 
         fetch(url, {
             method: method,
@@ -363,81 +539,39 @@
             }
         })
         .then(response => {
-            console.log(`Response status for ${url}: ${response.status}`);
+            console.log(`Status respons untuk ${url}: ${response.status}`);
             if (!response.ok) {
-                // If response is not OK (e.g., 400, 500), parse as text to see full error
                 return response.text().then(text => { throw new Error(text) });
             }
             return response.json();
         })
         .then(data => {
-            if (data.success) {
-                currentRoomCodes[data.code.id] = data.code;
-                renderRoomCodes(Object.values(currentRoomCodes));
-                refreshRoomCodeDisplay();
-                form.reset();
-                alert(data.message);
-            } else {
-                alert(data.message || 'Gagal menambahkan kode kamar.');
+            console.log('Data diterima (Tambah Kode):', data);
+            try {
+                if (data.success) {
+                    currentRoomCodes[data.code.id] = data.code;
+                    renderRoomCodes(Object.values(currentRoomCodes));
+                    refreshRoomCodeDisplay();
+                    form.reset();
+                    console.log('Berhasil!', data.message);
+                } else {
+                    console.error('Gagal!', data.message || 'Gagal menambahkan kode kamar.');
+                }
+            } catch (innerError) {
+                console.error('Error internal dalam blok .then yang berhasil (Tambah Kode):', innerError);
+                console.error('Error!', 'Terjadi kesalahan internal saat menambahkan kode kamar. Periksa konsol.');
             }
         })
         .catch(error => {
-            console.error('Error adding room code:', error);
-            try {
-                const errorData = error.message; // Error message is already text from .text()
-                alert('Terjadi kesalahan saat menambahkan kode kamar. Periksa konsol untuk detail: ' + errorData);
-            } catch (e) {
-                alert('Terjadi kesalahan saat menambahkan kode kamar. Periksa konsol untuk detail: ' + error.message);
+            console.error('Error saat fetch atau pemrosesan respons (Tambah Kode):', error);
+            let errorMessage = 'Terjadi kesalahan saat menambahkan kode kamar. Periksa konsol untuk detail.';
+            if (error.message && error.message.includes('<!DOCTYPE html>')) {
+                errorMessage += ' Server mengembalikan halaman HTML (mungkin 404 Not Found atau error server).';
+            } else {
+                errorMessage += ' ' + error.message;
             }
+            console.error('Error!', errorMessage);
         });
-    });
-
-    roomCodesList.addEventListener('change', function(event) {
-        const target = event.target;
-        if (target.matches('select[name="status"]')) {
-            const form = target.closest('form');
-            const formData = new FormData(form);
-            const url = form.action;
-            const method = 'POST';
-            const roomCodeId = url.split('/').slice(-2, -1)[0];
-
-            console.log(`Sending AJAX request: ${method} ${url}`);
-
-            fetch(url, {
-                method: method,
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            })
-            .then(response => {
-                console.log(`Response status for ${url}: ${response.status}`);
-                if (!response.ok) {
-                    return response.text().then(text => { throw new Error(text) });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    if (currentRoomCodes[roomCodeId]) {
-                        currentRoomCodes[roomCodeId].status = target.value;
-                        refreshRoomCodeDisplay();
-                    }
-                    alert(data.message);
-                } else {
-                    alert(data.message || 'Gagal memperbarui status kode kamar.');
-                }
-            })
-            .catch(error => {
-                console.error('Error updating room code status:', error);
-                try {
-                    const errorData = error.message; // Error message is already text from .text()
-                    alert('Terjadi kesalahan saat memperbarui status kode kamar. Periksa konsol untuk detail: ' + errorData);
-                } catch (e) {
-                    alert('Terjadi kesalahan saat memperbarui status kode kamar. Periksa konsol untuk detail: ' + error.message);
-                }
-            });
-        }
     });
 
 
@@ -457,9 +591,10 @@
             const form = document.getElementById('delete-room-code-form-' + roomCodeToDeleteId);
             const formData = new FormData(form);
             const url = form.action;
-            const method = 'POST';
+            const method = 'POST'; // This will be handled by @method('DELETE') in Laravel
+            const roomCodeId = parseInt(roomCodeToDeleteId); 
 
-            console.log(`Sending AJAX request: ${method} ${url}`);
+            console.log(`Mengirim permintaan AJAX: ${method} ${url}`);
 
             fetch(url, {
                 method: method,
@@ -469,30 +604,78 @@
                 }
             })
             .then(response => {
-                console.log(`Response status for ${url}: ${response.status}`);
+                console.log(`Status respons untuk ${url}: ${response.status}`);
+                console.log(`Content-Type respons untuk ${url}: ${response.headers.get('content-type')}`); // New log
                 if (!response.ok) {
                     return response.text().then(text => { throw new Error(text) });
                 }
-                return response.json();
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => {
+                        console.error('Respons non-JSON diterima:', text);
+                        throw new Error('Respons bukan JSON. Detail: ' + text.substring(0, 100) + '...');
+                    });
+                }
             })
             .then(data => {
-                if (data.success) {
-                    delete currentRoomCodes[roomCodeToDeleteId];
-                    renderRoomCodes(Object.values(currentRoomCodes));
-                    refreshRoomCodeDisplay();
-                    alert(data.message);
-                } else {
-                    alert(data.message || 'Gagal menghapus kode kamar.');
+                console.log('Data diterima (hapus kode):', data); // New log
+                try { // New try-catch block
+                    if (data.success) {
+                        const currentRoomId = modalRoomId.value;
+                        const fetchRoomCodesUrl = `/admin/rooms/${currentRoomId}/room-codes`; 
+                        console.log('Mengambil kode kamar yang diperbarui setelah penghapusan dari:', fetchRoomCodesUrl); // New log
+                        
+                        fetch(fetchRoomCodesUrl)
+                            .then(response => {
+                                console.log(`Status respons untuk ${fetchRoomCodesUrl}: ${response.status}`); // New log
+                                console.log(`Content-Type respons untuk ${fetchRoomCodesUrl}: ${response.headers.get('content-type')}`); // New log
+                                if (!response.ok) {
+                                    throw new Error('Gagal mengambil kode kamar terbaru setelah penghapusan.');
+                                }
+                                const contentType = response.headers.get('content-type');
+                                if (contentType && contentType.includes('application/json')) {
+                                    return response.json();
+                                } else {
+                                    return response.text().then(text => {
+                                        console.error('Respons non-JSON diterima saat mengambil kode yang diperbarui setelah penghapusan:', text);
+                                        throw new Error('Respons bukan JSON saat mengambil kode terbaru setelah penghapusan. Detail: ' + text.substring(0, 100) + '...');
+                                    });
+                                }
+                            })
+                            .then(updatedRoomCodes => {
+                                console.log('Kode kamar yang diperbarui diambil dari server setelah penghapusan:', updatedRoomCodes);
+                                currentRoomCodes = updatedRoomCodes.reduce((acc, code) => {
+                                    acc[code.id] = code;
+                                    return acc;
+                                }, {});
+                                console.log('currentRoomCodes dibangun ulang dari data yang diambil (hapus):', currentRoomCodes); // New log
+                                renderRoomCodes(Object.values(currentRoomCodes));
+                                refreshRoomCodeDisplay();
+                                console.log('Berhasil!', data.message); // Changed from showMessageModal
+                            })
+                            .catch(fetchError => {
+                                console.error('Error mengambil kode kamar yang diperbarui setelah penghapusan:', fetchError);
+                                console.error('Error!', 'Kode berhasil dihapus, tetapi gagal memuat daftar kode kamar terbaru. Periksa konsol.'); // Changed from showMessageModal
+                            });
+                    } else {
+                        console.error('Gagal!', data.message || 'Gagal menghapus kode kamar.'); // Changed from showMessageModal
+                    }
+                } catch (innerError) {
+                    console.error('Error internal dalam blok .then yang berhasil (hapus kode):', innerError);
+                    console.error('Error!', 'Terjadi kesalahan internal saat menghapus kode kamar. Periksa konsol.'); // Changed from showMessageModal
                 }
             })
             .catch(error => {
-                console.error('Error deleting room code:', error);
-                try {
-                    const errorData = error.message; // Error message is already text from .text()
-                    alert('Terjadi kesalahan saat menghapus kode kamar. Periksa konsol untuk detail: ' + errorData);
-                } catch (e) {
-                    alert('Terjadi kesalahan saat menghapus kode kamar. Periksa konsol untuk detail: ' + error.message);
+                console.error('Error saat fetch atau pemrosesan respons awal (hapus kode):', error);
+                let errorMessage = 'Terjadi kesalahan saat menghapus kode kamar. Periksa konsol untuk detail.';
+                if (error.message && error.message.includes('<!DOCTYPE html>')) {
+                    errorMessage += ' Server mengembalikan halaman HTML (mungkin 404 Not Found atau error server).';
+                } else {
+                    errorMessage += ' ' + error.message;
                 }
+                console.error('Error!', errorMessage); // Changed from showMessageModal
             })
             .finally(() => {
                 deleteConfirmationModal.classList.add('hidden');
@@ -507,43 +690,12 @@
     }
 
     window.onclick = function(event) {
+        // Only close if clicking outside the modal content, but not the modal itself
         if (event.target == deleteConfirmationModal) {
             deleteConfirmationModal.classList.add('hidden');
             roomCodeToDeleteId = null;
         } else if (event.target == roomCodeModal) {
             closeRoomCodeModal();
-        }
-    }
-
-    // --- Image Preview Logic (remains the same) ---
-    function previewImage(event, previewId) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            const output = document.getElementById(previewId);
-            const container = document.getElementById(previewId + '-container');
-            output.src = reader.result;
-            container.style.display = 'block';
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-
-    function previewMultipleImages(event, containerId) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = ''; // Clear previous previews
-
-        if (event.target.files) {
-            Array.from(event.target.files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imgDiv = document.createElement('div');
-                    imgDiv.classList.add('relative');
-                    imgDiv.innerHTML = `
-                        <img src="${e.target.result}" class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200">
-                    `;
-                    container.appendChild(imgDiv);
-                };
-                reader.readAsDataURL(file);
-            });
         }
     }
 </script>
