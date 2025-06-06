@@ -9,7 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('home', ['tittle' => 'Home Page']);
+    return view('home', ['title' => 'Home Page']);
 });
 
 // User-facing Room Routes
@@ -17,34 +17,33 @@ Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
 Route::get('/rooms/{room:slug}', [RoomController::class, 'show'])->name('rooms.show');
 
 Route::get('/facilities', function () {
-    return view('facilities', ['tittle' => 'Facilities Page']);
+    return view('facilities', ['title' => 'Facilities Page']);
 });
 
 Route::get('/reviews', [App\Http\Controllers\ReviewsController::class, 'index'] );
 
 Route::get('/about', function () {
-    return view('about', ['tittle' => 'About Us']);
+    return view('about', ['title' => 'About Us']);
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard', ['tittle' => 'Dashboard']);
-});
+use App\Http\Controllers\DashboardController;
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/booking', function () {
-    return view('booking', ['tittle' => 'Booking']);
+    return view('booking', ['title' => 'Booking']);
 });
 
 Route::get('/discounts', function () {
-    return view('discounts', ['tittle' => 'Discount']);
+    return view('discounts', ['title' => 'Discount']);
 });
 
 // Admin Dashboard/Settings Route
 Route::get('/settings', function () {
-    return view('settings', ['tittle' => 'Settings']);
+    return view('settings', ['title' => 'Settings']);
 })->name('admin.settings');
 
 Route::get('/reservation', function () {
-    return view('reservation', ['tittle' => 'Reservation']);
+    return view('reservation', ['title' => 'Reservation']);
 });
 
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
