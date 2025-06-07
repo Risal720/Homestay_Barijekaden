@@ -1,7 +1,11 @@
 <x-controlpanel>
-    <x-slot:title>{{ $title }}</x-slot:title>
+    <x-slot:tittle>{{ $tittle }}</x-slot:tittle>
+    <p>ini dashboard</p>
+    <x-slot:title>{{ $tittle }}</x-slot:title>
 
+    <x-slot:title>{{ $title }}</x-slot:title>
     <p>Ini dashboard</p>
+
 
     <div class="dashboard">
         <!-- Ringkasan Data & Statistik -->
@@ -46,3 +50,4 @@
         </section>
     </div>
 </x-controlpanel>
+
