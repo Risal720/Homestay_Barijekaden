@@ -12,7 +12,7 @@
 </head>
 <body class="bg-[#ffffff] h-screen">
 
-    <x-controlnav>{{ $tittle }}</x-controlnav>
+    <x-controlnav>{{ $title }}</x-controlnav>
 
     <div class="content-wrapper">
         <x-aside></x-aside>
