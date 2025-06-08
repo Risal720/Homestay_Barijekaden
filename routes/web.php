@@ -30,20 +30,20 @@ use App\Http\Controllers\DashboardController;
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/booking', function () {
-    return view('booking', ['title' => 'Booking']);
+    return view('booking', ['tittle' => 'Booking']);
 });
 
 Route::get('/discounts', function () {
-    return view('discounts', ['title' => 'Discount']);
+    return view('discounts', ['tittle' => 'Discount']);
 });
 
 // Admin Dashboard/Settings Route
 Route::get('/settings', function () {
-    return view('settings', ['title' => 'Settings']);
+    return view('settings', ['tittle' => 'Settings']);
 })->name('admin.settings');
 
 Route::get('/reservation', function () {
-    return view('reservation', ['title' => 'Reservation']);
+    return view('reservation', ['tittle' => 'Reservation']);
 });
 
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
