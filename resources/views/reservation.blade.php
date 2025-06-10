@@ -1,4 +1,4 @@
 <x-controlpanel>
-    <x-slot:tittle>{{ $tittle }}</x-slot:tittle>
+    <x-slot:title>{{ $title }}</x-slot:title>
     <p>ini reservation</p>
 </x-controlpanel>
