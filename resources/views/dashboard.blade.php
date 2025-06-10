@@ -60,7 +60,7 @@
 
                 {{-- Card: Placeholder untuk Grafik (contoh) --}}
                 <div class="bg-emerald-100 p-6 rounded-lg shadow-md">
-                    <h2 class="text-xl font-semibold mb-4 text-emerald-800">Tren Data (Contoh Grafik)</h2>
+                    <h2 class="text-xl font-semibold mb-4 text-emerald-800">Tren Data </h2>
                     <div class="bg-emerald-200 h-48 flex items-center justify-center text-emerald-600 font-medium">
                         Area untuk Grafik (misal: Chart.js)
                     </div>

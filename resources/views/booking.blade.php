@@ -1,6 +1,6 @@
 <x-controlpanel>
 
-    <x-slot:tittle>{{ $tittle }}</x-slot:tittle>
+    <x-slot:title>{{ $title }}</x-slot:title>
     <head>
         <style>
             /* Tambahkan ini untuk memastikan html dan body direset dengan benar */
