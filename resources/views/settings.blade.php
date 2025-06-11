@@ -1,5 +1,5 @@
 <x-controlpanel>
-    <x-slot:tittle>{{ $tittle }}</x-slot:tittle>
+    <x-slot:title>{{ $title }}</x-slot:title>
 
     <div class="container mx-auto p-6">
         <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Dashboard Admin</h1>
