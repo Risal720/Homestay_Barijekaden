@@ -1,125 +1,157 @@
-<?php // PASTIКAN INI ADALAH HAL PERTAMA DI FILE, TANPA SPASI ATAU KARAKTER DI DEPANNYA
+<?php
 
 namespace App\Http\Controllers;
 
+use App\Models\Discount; // Pastikan model Discount Anda ada di App\Models
 use Illuminate\Http\Request;
-use App\Models\Discount; // Pastikan ini di-uncomment jika Anda punya model Discount
-// Tambahkan use statement untuk model Discount Anda jika sudah ada.
-// Contoh: use App\Models\Discount;
+use Illuminate\Validation\Rule; // Diperlukan untuk validasi unique saat update
 
 class DiscountController extends Controller
 {
     /**
-     * Menampilkan daftar semua diskon.
+     * Display a listing of the resource (Menampilkan daftar semua diskon).
+     *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        // Logika untuk menampilkan daftar diskon
-        // return view('admin.discounts.index'); // Sesuaikan dengan nama view Anda
-        return view('discounts.index', ['title' => 'Discounts']); // Contoh umum untuk view admin
+        // Mengambil semua data diskon dari database, diurutkan berdasarkan 'created_at' terbaru.
+        // Anda bisa menambahkan pagination jika data diskon akan sangat banyak, contoh:
+        // $discounts = Discount::latest()->paginate(10);
+        $discounts = Discount::latest()->get();
+
+        // Mengembalikan view 'admin.discounts.index' dan mengirimkan data diskon.
+        // Pastikan file view Anda ada di: resources/views/admin/discounts/index.blade.php
+        return view('admin.discounts.index', [
+            'title'     => 'Daftar Diskon', // Judul halaman
+            'discounts' => $discounts,     // Variabel $discounts akan tersedia di view
+        ]);
     }
 
     /**
-     * Menampilkan form untuk membuat diskon baru.
+     * Show the form for creating a new resource (Menampilkan form untuk membuat diskon baru).
+     *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        // Logika untuk menampilkan form pembuatan diskon
-        // return view('admin.discounts.create'); // Sesuaikan dengan nama view Anda
-        return view('discounts.create', ['title' => 'Buat Diskon Baru']);
+        // Mengembalikan view 'admin.discounts.create' untuk form pembuatan diskon.
+        // Pastikan file view Anda ada di: resources/views/admin/discounts/create.blade.php
+        return view('admin.discounts.create', [
+            'title' => 'Buat Diskon Baru', // Judul halaman
+        ]);
     }
 
     /**
-     * Menyimpan diskon baru ke database.
+     * Store a newly created resource in storage (Menyimpan diskon baru ke database).
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        // Logika untuk validasi dan menyimpan diskon
+        // Validasi data yang masuk dari form.
         $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'nullable|string|unique:discounts,code|max:50', // asumsi ada tabel discounts
-            'type' => 'required|in:percentage,fixed',
-            'value' => 'required|numeric|min:0',
-            'min_amount' => 'nullable|numeric|min:0',
-            'max_uses' => 'nullable|integer|min:1',
-            'starts_at' => 'nullable|date',
-            'expires_at' => 'nullable|date|after_or_equal:starts_at',
+            'name'       => 'required|string|max:255',
+            'code'       => 'nullable|string|unique:discounts,code|max:50', // Code harus unik jika diisi
+            'type'       => 'required|in:percentage,fixed', // Tipe diskon harus 'percentage' atau 'fixed'
+            'value'      => 'required|numeric|min:0', // Nilai diskon tidak boleh negatif
+            'min_amount' => 'nullable|numeric|min:0', // Jumlah minimum order
+            'max_uses'   => 'nullable|integer|min:1', // Batas penggunaan diskon
+            'starts_at'  => 'nullable|date', // Tanggal mulai berlaku
+            'expires_at' => 'nullable|date|after_or_equal:starts_at', // Tanggal kadaluarsa harus setelah atau sama dengan tanggal mulai
         ]);
 
-        // Jika Anda memiliki model Discount, uncomment baris ini:
-        // Discount::create($request->all());
+        // Membuat record diskon baru di database menggunakan data yang tervalidasi.
+        // Properti $fillable di model Discount harus disetel agar ini berfungsi.
+        Discount::create($request->all());
 
-        return redirect()->route('admin.discounts.index')->with('success', 'Diskon berhasil ditambahkan!');
+        // Mengalihkan kembali ke halaman daftar diskon dengan pesan sukses.
+        return redirect()->route('admin.discounts.index')
+                         ->with('success', 'Diskon berhasil ditambahkan!');
     }
 
     /**
-     * Menampilkan detail diskon tertentu.
-     * @param  int  $id
+     * Display the specified resource (Menampilkan detail diskon tertentu).
+     *
+     * @param  \App\Models\Discount  $discount
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Discount $discount) // Menggunakan Route Model Binding
     {
-        // Jika Anda memiliki model Discount, uncomment baris ini:
-        // $discount = Discount::findOrFail($id);
-        // return view('discounts.show', compact('discount'));
-        return view('discounts.show', ['title' => 'Detail Diskon', 'id' => $id]); // Contoh sementara
+        // Mengembalikan view 'admin.discounts.show' dan mengirimkan data diskon.
+        // Laravel secara otomatis akan menemukan diskon berdasarkan ID di URL jika menggunakan Route Model Binding.
+        // Pastikan file view Anda ada di: resources/views/admin/discounts/show.blade.php
+        return view('admin.discounts.show', [
+            'title'    => 'Detail Diskon', // Judul halaman
+            'discount' => $discount,      // Variabel $discount akan tersedia di view
+        ]);
     }
 
     /**
-     * Menampilkan form untuk mengedit diskon.
-     * @param  int  $id
+     * Show the form for editing the specified resource (Menampilkan form untuk mengedit diskon).
+     *
+     * @param  \App\Models\Discount  $discount
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Discount $discount) // Menggunakan Route Model Binding
     {
-        // Jika Anda memiliki model Discount, uncomment baris ini:
-        // $discount = Discount::findOrFail($id);
-        // return view('discounts.edit', compact('discount'));
-        return view('discounts.edit', ['title' => 'Edit Diskon', 'id' => $id]); // Contoh sementara
+        // Mengembalikan view 'admin.discounts.edit' dan mengirimkan data diskon.
+        // Pastikan file view Anda ada di: resources/views/admin/discounts/edit.blade.php
+        return view('admin.discounts.edit', [
+            'title'    => 'Edit Diskon', // Judul halaman
+            'discount' => $discount,    // Variabel $discount akan tersedia di view
+        ]);
     }
 
     /**
-     * Memperbarui diskon di database.
+     * Update the specified resource in storage (Memperbarui diskon di database).
+     *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Discount  $discount
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Discount $discount) // Menggunakan Route Model Binding
     {
-        // Logika untuk validasi dan memperbarui diskon
+        // Validasi data yang masuk dari form.
+        // Rule::unique di sini menggunakan $discount->id untuk mengecualikan diskon yang sedang diedit dari pemeriksaan keunikan code.
         $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'nullable|string|unique:discounts,code,' . $id . '|max:50', // asumsi ada tabel discounts
-            'type' => 'required|in:percentage,fixed',
-            'value' => 'required|numeric|min:0',
+            'name'       => 'required|string|max:255',
+            'code'       => [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('discounts')->ignore($discount->id), // Pastikan code unik, kecuali untuk diskon ini sendiri
+            ],
+            'type'       => 'required|in:percentage,fixed',
+            'value'      => 'required|numeric|min:0',
             'min_amount' => 'nullable|numeric|min:0',
-            'max_uses' => 'nullable|integer|min:1',
-            'starts_at' => 'nullable|date',
+            'max_uses'   => 'nullable|integer|min:1',
+            'starts_at'  => 'nullable|date',
             'expires_at' => 'nullable|date|after_or_equal:starts_at',
         ]);
 
-        // Jika Anda memiliki model Discount, uncomment baris ini:
-        // $discount = Discount::findOrFail($id);
-        // $discount->update($request->all());
+        // Memperbarui record diskon di database.
+        $discount->update($request->all());
 
-        return redirect()->route('admin.discounts.index')->with('success', 'Diskon berhasil diperbarui!');
+        // Mengalihkan kembali ke halaman daftar diskon dengan pesan sukses.
+        return redirect()->route('admin.discounts.index')
+                         ->with('success', 'Diskon berhasil diperbarui!');
     }
 
     /**
-     * Menghapus diskon dari database.
-     * @param  int  $id
+     * Remove the specified resource from storage (Menghapus diskon dari database).
+     *
+     * @param  \App\Models\Discount  $discount
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Discount $discount) // Menggunakan Route Model Binding
     {
-        // Jika Anda memiliki model Discount, uncomment baris ini:
-        // $discount = Discount::findOrFail($id);
-        // $discount->delete();
+        // Menghapus record diskon dari database.
+        $discount->delete();
 
-        return redirect()->route('admin.discounts.index')->with('success', 'Diskon berhasil dihapus!');
+        // Mengalihkan kembali ke halaman daftar diskon dengan pesan sukses.
+        return redirect()->route('admin.discounts.index')
+                         ->with('success', 'Diskon berhasil dihapus!');
     }
 }
