@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ReviewsController;
+use App\Http\Controllers\ReviewsAppController; // <--- Hati-hati dengan ini jika tidak dipakai
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\AdminRoomController;
 use App\Http\Controllers\DashboardController;
@@ -9,9 +9,11 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AnalyticsController;
-use App\Http\Controllers\DiscountController; 
+use App\Http\Controllers\DiscountController;
+use App\Http\Controllers\ReviewController; // <-- TAMBAHKAN ATAU PASTIKAN INI ADA DAN BENAR
+
 use App\Models\Room;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Arr; // <--- Mungkin tidak diperlukan jika tidak ada fungsi Arr yang dipakai langsung
 use Illuminate\Support\Facades\Route;
 
 // Rute Halaman Utama
@@ -29,7 +31,9 @@ Route::get('/facilities', function () {
 });
 
 // Rute Halaman Ulasan
-Route::get('/reviews', [App\Http\Controllers\ReviewsController::class, 'index'] );
+// PASTIKAN NAMA CONTROLLER DI SINI SESUAI DENGAN NAMA FILE DAN KELAS ANDA
+Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index'); // <-- Diubah
+Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store'); // <-- Ditambahkan
 
 // Rute Halaman Tentang Kami
 Route::get('/about', function () {
@@ -44,14 +48,6 @@ Route::get('/booking', function () {
     return view('booking', ['title' => 'Booking']);
 });
 
-// >>>>>> BAGIAN YANG DIHAPUS/DIUBAH <<<<<<
-// Rute ini dikomentari karena rute `admin.discounts.index` akan menanganinya
-// Route::get('/discounts', function () {
-//     return view('discounts', ['title' => 'Discount']);
-// });
-// >>>>>> AKHIR BAGIAN YANG DIHAPUS/DIUBAH <<<<<<
-
-
 // Rute Dashboard Admin/Pengaturan
 Route::get('/settings', function () {
     return view('settings', ['title' => 'Settings']);
@@ -63,7 +59,7 @@ Route::get('/reservation', function () {
 });
 
 // Rute Otentikasi (Login dan Registrasi)
-Route::get('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
+Route::get('/login', [AuthController::class, 'login'])->name('login'); // <-- Diubah agar konsisten dengan `use` statement
 Route::post('/login', [AuthController::class, 'authenticate']);
 Route::post('/register', [AuthController::class, 'register']);
 
