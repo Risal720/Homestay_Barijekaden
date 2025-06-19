@@ -49,10 +49,12 @@ Route::get('/booking', function () {
     return view('booking', ['title' => 'Booking']);
 })->name('booking');
 
-// Rute Dashboard Admin/Pengaturan (Hanya bisa diakses jika sudah login)
+// Rute Dashboard Admin/Pengaturan
+// PENTING: Middleware 'auth' DIHAPUS agar bisa diakses tanpa login.
+// KEMBALIKAN INI UNTUK APLIKASI PRODUKSI!
 Route::get('/settings', function () {
     return view('settings', ['title' => 'Settings']);
-})->name('admin.settings')->middleware('auth');
+})->name('admin.settings'); // middleware('auth') DIHAPUS
 
 // Rute Halaman Reservasi
 Route::get('/reservation', function () {
@@ -73,8 +75,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 // Rute Admin untuk Manajemen Kamar, Produk, Pesanan, Laporan, Analisis, dan Diskon
-// PENTING: Semua rute di dalam grup ini akan tetap dilindungi oleh middleware 'auth'
-Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+// PENTING: Middleware 'auth' DIHAPUS dari grup ini agar bisa diakses tanpa login.
+// KEMBALIKAN INI UNTUK APLIKASI PRODUKSI!
+Route::prefix('admin')->name('admin.')->group(function () { // middleware('auth') DIHAPUS dari sini
     // Rute spesifik untuk Manajemen Kamar (PENTING: Pindahkan rute spesifik ini di atas Route::resource agar diprioritaskan)
     Route::post('rooms/{room}/add-code', [AdminRoomController::class, 'addRoomCode'])->name('rooms.add_code');
     Route::post('room-codes/{roomCode}/status', [AdminRoomController::class, 'updateRoomCodeStatus'])->name('room_codes.update_status');
