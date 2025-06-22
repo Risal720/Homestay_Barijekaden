@@ -1,87 +1,94 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ReviewsController;
-use App\Http\Controllers\RoomController;
-use App\Http\Controllers\AdminRoomController;
+use App\Http\Controllers\RoomController; // Untuk user-facing rooms
+use App\Http\Controllers\AdminRoomController; // Untuk admin rooms CRUD
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AnalyticsController;
-use App\Http\Controllers\DiscountController; 
-use App\Models\Room;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DiscountController;
+use App\Http\Controllers\ReviewController;
+
+use Illuminate\Support\Facades\Route; // Pastikan ini ada
 
 // Rute Halaman Utama
 Route::get('/', function () {
     return view('home', ['title' => 'Home Page']);
-});
+})->name('home');
 
 // Rute Kamar yang Menghadap Pengguna (User-facing Room Routes)
+// Ini adalah RoomController yang hanya menangani index dan show untuk publik
 Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
 Route::get('/rooms/{room:slug}', [RoomController::class, 'show'])->name('rooms.show');
 
 // Rute Halaman Fasilitas
 Route::get('/facilities', function () {
     return view('facilities', ['title' => 'Facilities Page']);
-});
+})->name('facilities');
 
 // Rute Halaman Ulasan
-Route::get('/reviews', [App\Http\Controllers\ReviewsController::class, 'index'] );
+Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
 // Rute Halaman Tentang Kami
 Route::get('/about', function () {
     return view('about', ['title' => 'About Us']);
-});
+})->name('about');
 
 // Rute Dashboard Utama
+// PENTING: Middleware 'auth' DIHAPUS agar bisa diakses tanpa login (HANYA UNTUK DEVELOPMENT!).
+// KEMBALIKAN INI UNTUK APLIKASI PRODUKSI!
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Rute Halaman Pemesanan
 Route::get('/booking', function () {
-    return view('booking', ['tittle' => 'Booking']);
-});
-
-
-Route::get('/discounts', function () {
-    return view('discounts', ['tittle' => 'Discount']);
-});
-
-// >>>>>> BAGIAN YANG DIHAPUS/DIUBAH <<<<<<
-// Rute ini dikomentari karena rute `admin.discounts.index` akan menanganinya
-// Route::get('/discounts', function () {
-//     return view('discounts', ['title' => 'Discount']);
-// });
-// >>>>>> AKHIR BAGIAN YANG DIHAPUS/DIUBAH <<<<<<
-f16b6539ffc89b7b6cd08a3430a190fbae4fb091
-
+    return view('booking', ['title' => 'Booking']);
+})->name('booking');
 
 // Rute Dashboard Admin/Pengaturan
+// PENTING: Middleware 'auth' DIHAPUS agar bisa diakses tanpa login (HANYA UNTUK DEVELOPMENT!).
+// KEMBALIKAN INI UNTUK APLIKASI PRODUKSI!
 Route::get('/settings', function () {
-    return view('settings', ['tittle' => 'Settings']);
-})->name('admin.settings');
+    return view('settings', ['title' => 'Settings']);
+})->name('admin.settings'); // middleware('auth') DIHAPUS
 
 // Rute Halaman Reservasi
 Route::get('/reservation', function () {
-    return view('reservation', ['tittle' => 'Reservation']);
-});
+    return view('reservation', ['title' => 'Reservation']);
+})->name('reservation');
 
 // Rute Otentikasi (Login dan Registrasi)
-Route::get('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
-Route::post('/login', [AuthController::class, 'authenticate']);
-Route::post('/register', [AuthController::class, 'register']);
+Route::get('/login', [AuthController::class, 'login'])->name('login'); // Menampilkan form login (view home)
+Route::post('/login', [AuthController::class, 'authenticate']); // Memproses data login
+
+// Rute untuk menampilkan form registrasi (Jika Anda ingin mengimplementasikan fitur registrasi)
+// Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']); // Memproses data registrasi
+
+// Rute Logout (PENTING: Gunakan method POST dan berikan nama rute)
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 
 // Rute Admin untuk Manajemen Kamar, Produk, Pesanan, Laporan, Analisis, dan Diskon
-Route::prefix('admin')->name('admin.')->group(function () {
-    // Rute spesifik untuk Manajemen Kamar (PENTING: Pindahkan rute spesifik ini di atas Route::resource)
+// PENTING: Middleware 'auth' DIHAPUS dari grup ini agar bisa diakses tanpa login (HANYA UNTUK DEVELOPMENT!).
+// KEMBALIKAN INI UNTUK APLIKASI PRODUKSI!
+Route::prefix('admin')->name('admin.')->group(function () { // middleware('auth') DIHAPUS dari sini
+
+    // Rute spesifik untuk Manajemen Kamar (PENTING: Pindahkan rute spesifik ini di atas Route::resource agar diprioritaskan)
     Route::post('rooms/{room}/add-code', [AdminRoomController::class, 'addRoomCode'])->name('rooms.add_code');
     Route::post('room-codes/{roomCode}/status', [AdminRoomController::class, 'updateRoomCodeStatus'])->name('room_codes.update_status');
     Route::delete('room-codes/{roomCode}', [AdminRoomController::class, 'deleteRoomCode'])->name('room_codes.destroy');
     Route::get('rooms/{room}/room-codes', [AdminRoomController::class, 'getRoomCodes'])->name('rooms.get_room_codes');
 
     // Resource Route untuk Manajemen Kamar (akan membuat rute CRUD standar)
+    // Ini akan membuat:
+    // GET /admin/rooms          -> AdminRoomController@index   -> admin.rooms.index
+    // GET /admin/rooms/create   -> AdminRoomController@create  -> admin.rooms.create  <-- Ini yang akan menampilkan form Anda
+    // POST /admin/rooms         -> AdminRoomController@store   -> admin.rooms.store   <-- Ini yang akan menerima data dari form Anda
+    // GET /admin/rooms/{room}   -> AdminRoomController@show    -> admin.rooms.show
+    // ...dan rute edit, update, destroy lainnya
     Route::resource('rooms', AdminRoomController::class);
 
     // Rute spesifik untuk Manajemen Gambar Kamar dan Awalan Kamar
@@ -98,13 +105,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Rute untuk Laporan (misalnya, laporan penjualan)
     Route::get('reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
 
-    // --- Tambahan untuk Manajemen Analisis ---
-    // Definisikan rute spesifik untuk analisis pelanggan
+    // Rute untuk Manajemen Analisis
     Route::get('analytics/customers', [AnalyticsController::class, 'customers'])->name('analytics.customers');
-    // --- Akhir tambahan ---
 
-    // --- TAMBAHAN UNTUK DISCOUNT MANAGEMENT ---
-    // Resource Route untuk Manajemen Diskon (ini akan membuat rute CRUD standar untuk diskon dengan awalan admin.)
+    // Resource Route untuk Manajemen Diskon
     Route::resource('discounts', DiscountController::class);
-    // --- AKHIR TAMBAHAN ---
 });

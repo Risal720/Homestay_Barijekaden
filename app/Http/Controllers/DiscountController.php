@@ -1,125 +1,221 @@
-<?php // PASTIКAN INI ADALAH HAL PERTAMA DI FILE, TANPA SPASI ATAU KARAKTER DI DEPANNYA
+<?php
 
 namespace App\Http\Controllers;
 
+use App\Models\Discount; // Pastikan model Discount Anda ada di App\Models
 use Illuminate\Http\Request;
-use App\Models\Discount; // Pastikan ini di-uncomment jika Anda punya model Discount
-// Tambahkan use statement untuk model Discount Anda jika sudah ada.
-// Contoh: use App\Models\Discount;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB; // Diperlukan untuk transaksi database (opsional)
+use Illuminate\Support\Facades\Log; // Diperlukan untuk logging error (opsional)
+
+// Import Policy jika Anda akan menggunakannya untuk otorisasi (opsional)
+// use App\Policies\DiscountPolicy;
+// use Illuminate\Auth\Access\AuthorizationException; // Diperlukan jika menggunakan kebijakan/policy
 
 class DiscountController extends Controller
 {
     /**
-     * Menampilkan daftar semua diskon.
+     * Konstruktor
+     * Anda bisa menambahkan middleware otorisasi di sini
+     * untuk menerapkan kebijakan akses di seluruh controller.
+     */
+    public function __construct()
+    {
+        // Contoh: Hanya pengguna yang memiliki kemampuan 'manage-discounts' yang bisa mengakses semua metode
+        // $this->middleware('can:manage-discounts');
+
+        // Contoh: Menggunakan Laravel Policy (pastikan DiscountPolicy dibuat)
+        // $this->authorizeResource(Discount::class, 'discount');
+    }
+
+    /**
+     * Display a listing of the resource (Menampilkan daftar semua diskon).
+     *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        // Logika untuk menampilkan daftar diskon
-        // return view('admin.discounts.index'); // Sesuaikan dengan nama view Anda
-        return view('discounts.index', ['title' => 'Discounts']); // Contoh umum untuk view admin
+        // Opsi 1: Mengambil semua data diskon
+        // $discounts = Discount::latest()->get();
+
+        // Opsi 2: Menggunakan paginasi (lebih disarankan untuk data banyak)
+        $discounts = Discount::latest()->paginate(10); // Menampilkan 10 diskon per halaman
+
+        return view('admin.discounts.index', [
+            'title'     => 'Daftar Diskon',
+            'discounts' => $discounts,
+        ]);
     }
 
     /**
-     * Menampilkan form untuk membuat diskon baru.
+     * Show the form for creating a new resource (Menampilkan form untuk membuat diskon baru).
+     *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        // Logika untuk menampilkan form pembuatan diskon
-        // return view('admin.discounts.create'); // Sesuaikan dengan nama view Anda
-        return view('discounts.create', ['title' => 'Buat Diskon Baru']);
+        // Jika Anda menggunakan Policy dan ingin otorisasi per metode
+        // $this->authorize('create', Discount::class);
+
+        return view('admin.discounts.create', [
+            'title' => 'Buat Diskon Baru',
+        ]);
     }
 
     /**
-     * Menyimpan diskon baru ke database.
+     * Store a newly created resource in storage (Menyimpan diskon baru ke database).
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        // Logika untuk validasi dan menyimpan diskon
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'nullable|string|unique:discounts,code|max:50', // asumsi ada tabel discounts
-            'type' => 'required|in:percentage,fixed',
-            'value' => 'required|numeric|min:0',
+        // Jika Anda menggunakan Policy
+        // $this->authorize('create', Discount::class);
+
+        $validatedData = $request->validate([
+            'name'       => 'required|string|max:255',
+            'code'       => 'nullable|string|unique:discounts,code|max:50',
+            'type'       => 'required|in:percentage,fixed',
+            'value'      => 'required|numeric|min:0',
             'min_amount' => 'nullable|numeric|min:0',
-            'max_uses' => 'nullable|integer|min:1',
-            'starts_at' => 'nullable|date',
+            'max_uses'   => 'nullable|integer|min:1',
+            'starts_at'  => 'nullable|date',
             'expires_at' => 'nullable|date|after_or_equal:starts_at',
         ]);
 
-        // Jika Anda memiliki model Discount, uncomment baris ini:
-        // Discount::create($request->all());
+        try {
+            // Opsi 1: Tanpa transaksi (umumnya cukup untuk operasi sederhana)
+            // Discount::create($validatedData);
 
-        return redirect()->route('admin.discounts.index')->with('success', 'Diskon berhasil ditambahkan!');
+            // Opsi 2: Dengan transaksi database (lebih aman untuk operasi kompleks)
+            DB::beginTransaction();
+            Discount::create($validatedData);
+            DB::commit();
+
+            return redirect()->route('admin.discounts.index')
+                             ->with('success', 'Diskon berhasil ditambahkan!');
+
+        } catch (\Exception $e) {
+            DB::rollBack(); // Rollback jika ada error
+            Log::error('Error creating discount: ' . $e->getMessage()); // Catat error
+            return redirect()->back()
+                             ->withInput() // Isi kembali form dengan input sebelumnya
+                             ->with('error', 'Terjadi kesalahan saat menambahkan diskon. Silakan coba lagi.');
+        }
     }
 
     /**
-     * Menampilkan detail diskon tertentu.
-     * @param  int  $id
+     * Display the specified resource (Menampilkan detail diskon tertentu).
+     *
+     * @param  \App\Models\Discount  $discount
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Discount $discount)
     {
-        // Jika Anda memiliki model Discount, uncomment baris ini:
-        // $discount = Discount::findOrFail($id);
-        // return view('discounts.show', compact('discount'));
-        return view('discounts.show', ['title' => 'Detail Diskon', 'id' => $id]); // Contoh sementara
+        // Jika Anda menggunakan Policy
+        // $this->authorize('view', $discount);
+
+        return view('admin.discounts.show', [
+            'title'    => 'Detail Diskon',
+            'discount' => $discount,
+        ]);
     }
 
     /**
-     * Menampilkan form untuk mengedit diskon.
-     * @param  int  $id
+     * Show the form for editing the specified resource (Menampilkan form untuk mengedit diskon).
+     *
+     * @param  \App\Models\Discount  $discount
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Discount $discount)
     {
-        // Jika Anda memiliki model Discount, uncomment baris ini:
-        // $discount = Discount::findOrFail($id);
-        // return view('discounts.edit', compact('discount'));
-        return view('discounts.edit', ['title' => 'Edit Diskon', 'id' => $id]); // Contoh sementara
+        // Jika Anda menggunakan Policy
+        // $this->authorize('update', $discount);
+
+        return view('admin.discounts.edit', [
+            'title'    => 'Edit Diskon',
+            'discount' => $discount,
+        ]);
     }
 
     /**
-     * Memperbarui diskon di database.
+     * Update the specified resource in storage (Memperbarui diskon di database).
+     *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Discount  $discount
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Discount $discount)
     {
-        // Logika untuk validasi dan memperbarui diskon
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'nullable|string|unique:discounts,code,' . $id . '|max:50', // asumsi ada tabel discounts
-            'type' => 'required|in:percentage,fixed',
-            'value' => 'required|numeric|min:0',
+        // Jika Anda menggunakan Policy
+        // $this->authorize('update', $discount);
+
+        $validatedData = $request->validate([
+            'name'       => 'required|string|max:255',
+            'code'       => [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('discounts')->ignore($discount->id),
+            ],
+            'type'       => 'required|in:percentage,fixed',
+            'value'      => 'required|numeric|min:0',
             'min_amount' => 'nullable|numeric|min:0',
-            'max_uses' => 'nullable|integer|min:1',
-            'starts_at' => 'nullable|date',
+            'max_uses'   => 'nullable|integer|min:1',
+            'starts_at'  => 'nullable|date',
             'expires_at' => 'nullable|date|after_or_equal:starts_at',
         ]);
 
-        // Jika Anda memiliki model Discount, uncomment baris ini:
-        // $discount = Discount::findOrFail($id);
-        // $discount->update($request->all());
+        try {
+            // Opsi 1: Tanpa transaksi
+            // $discount->update($validatedData);
 
-        return redirect()->route('admin.discounts.index')->with('success', 'Diskon berhasil diperbarui!');
+            // Opsi 2: Dengan transaksi database
+            DB::beginTransaction();
+            $discount->update($validatedData);
+            DB::commit();
+
+            return redirect()->route('admin.discounts.index')
+                             ->with('success', 'Diskon berhasil diperbarui!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error updating discount ' . $discount->id . ': ' . $e->getMessage());
+            return redirect()->back()
+                             ->withInput()
+                             ->with('error', 'Terjadi kesalahan saat memperbarui diskon. Silakan coba lagi.');
+        }
     }
 
     /**
-     * Menghapus diskon dari database.
-     * @param  int  $id
+     * Remove the specified resource from storage (Menghapus diskon dari database).
+     *
+     * @param  \App\Models\Discount  $discount
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Discount $discount)
     {
-        // Jika Anda memiliki model Discount, uncomment baris ini:
-        // $discount = Discount::findOrFail($id);
-        // $discount->delete();
+        // Jika Anda menggunakan Policy
+        // $this->authorize('delete', $discount);
 
-        return redirect()->route('admin.discounts.index')->with('success', 'Diskon berhasil dihapus!');
+        try {
+            // Opsi 1: Tanpa transaksi
+            // $discount->delete();
+
+            // Opsi 2: Dengan transaksi database
+            DB::beginTransaction();
+            $discount->delete();
+            DB::commit();
+
+            return redirect()->route('admin.discounts.index')
+                             ->with('success', 'Diskon berhasil dihapus!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error deleting discount ' . $discount->id . ': ' . $e->getMessage());
+            return redirect()->back()
+                             ->with('error', 'Terjadi kesalahan saat menghapus diskon. Silakan coba lagi.');
+        }
     }
 }

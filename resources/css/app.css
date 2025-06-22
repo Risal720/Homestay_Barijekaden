@@ -11,5 +11,18 @@
 
 @theme {
     --font-sans: InterVariable, sans-serif;
-      
 }
+
+/* --- KODE CSS UNTUK TOMBOL (DIREVISI KEMBALI) --- */
+
+.btn-dashboard {
+    /* Gaya dasar seperti di gambar Anda: hijau, rounded-md */
+    @apply inline-flex items-center justify-center w-full py-2 px-4 rounded-md text-white font-semibold transition duration-200 ease-in-out;
+}
+
+/* Tambahan: Jika ingin warna tombol Login, Pengaturan, Laporan/Analisis berbeda,
+   Anda bisa buat kelas terpisah, atau langsung gunakan kelas Tailwind di Blade.
+   Untuk saat ini, saya asumsikan semua akan pakai btn-dashboard dengan warna di Blade.
+*/
+
+/* --- AKHIR KODE CUSTOM CSS UNTUL TOMBOL --- */
