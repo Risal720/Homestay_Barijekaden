@@ -14,4 +14,10 @@ class RoomPrefix extends Model
         'max_limit',
         'next_number',
     ];
+
+    // Opsional: Anda bisa menambahkan relationship jika RoomPrefix punya banyak RoomCodes
+    // public function roomCodes()
+    // {
+    //     return $this->hasMany(RoomCode::class, 'prefix'); // Sesuaikan foreign key jika tidak standar
+    // }
 }
