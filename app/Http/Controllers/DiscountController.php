@@ -73,24 +73,33 @@ class DiscountController extends Controller
         // Jika Anda menggunakan Policy
         // $this->authorize('create', Discount::class);
 
+        // Validasi disesuaikan dengan nama input dari form HTML
         $validatedData = $request->validate([
-            'name'       => 'required|string|max:255',
-            'code'       => 'nullable|string|unique:discounts,code|max:50',
-            'type'       => 'required|in:percentage,fixed',
-            'value'      => 'required|numeric|min:0',
-            'min_amount' => 'nullable|numeric|min:0',
-            'max_uses'   => 'nullable|integer|min:1',
-            'starts_at'  => 'nullable|date',
-            'expires_at' => 'nullable|date|after_or_equal:starts_at',
+            'name'             => 'required|string|max:255', // Pastikan Anda menambahkan input 'name' di form HTML
+            'kode_diskon'      => 'nullable|string|unique:discounts,code|max:50',
+            'tipe_diskon'      => 'required|in:percentage,fixed',
+            'nilai_diskon'     => 'required|numeric|min:0',
+            'tanggal_mulai'    => 'nullable|date',
+            'tanggal_berakhir' => 'nullable|date|after_or_equal:tanggal_mulai',
+            'batas_penggunaan' => 'nullable|integer|min:1',
+            // 'min_amount' => 'nullable|numeric|min:0', // Jika Anda masih ingin menggunakan 'min_amount', tambahkan di form HTML
         ]);
 
         try {
-            // Opsi 1: Tanpa transaksi (umumnya cukup untuk operasi sederhana)
-            // Discount::create($validatedData);
-
-            // Opsi 2: Dengan transaksi database (lebih aman untuk operasi kompleks)
             DB::beginTransaction();
-            Discount::create($validatedData);
+
+            // Mapping data dari nama input form ke nama kolom database (jika berbeda)
+            Discount::create([
+                'name'         => $validatedData['name'],
+                'code'         => $validatedData['kode_diskon'],
+                'type'         => $validatedData['tipe_diskon'],
+                'value'        => $validatedData['nilai_diskon'],
+                'starts_at'    => $validatedData['tanggal_mulai'],
+                'expires_at'   => $validatedData['tanggal_berakhir'],
+                'max_uses'     => $validatedData['batas_penggunaan'],
+                // 'min_amount' => $validatedData['min_amount'] ?? null, // Sesuaikan jika 'min_amount' ada di form
+            ]);
+
             DB::commit();
 
             return redirect()->route('admin.discounts.index')
@@ -151,29 +160,38 @@ class DiscountController extends Controller
         // Jika Anda menggunakan Policy
         // $this->authorize('update', $discount);
 
+        // Validasi disesuaikan dengan nama input dari form HTML
         $validatedData = $request->validate([
-            'name'       => 'required|string|max:255',
-            'code'       => [
+            'name'             => 'required|string|max:255', // Pastikan Anda menambahkan input 'name' di form HTML
+            'kode_diskon'      => [
                 'nullable',
                 'string',
                 'max:50',
-                Rule::unique('discounts')->ignore($discount->id),
+                Rule::unique('discounts', 'code')->ignore($discount->id),
             ],
-            'type'       => 'required|in:percentage,fixed',
-            'value'      => 'required|numeric|min:0',
-            'min_amount' => 'nullable|numeric|min:0',
-            'max_uses'   => 'nullable|integer|min:1',
-            'starts_at'  => 'nullable|date',
-            'expires_at' => 'nullable|date|after_or_equal:starts_at',
+            'tipe_diskon'      => 'required|in:percentage,fixed',
+            'nilai_diskon'     => 'required|numeric|min:0',
+            'tanggal_mulai'    => 'nullable|date',
+            'tanggal_berakhir' => 'nullable|date|after_or_equal:tanggal_mulai',
+            'batas_penggunaan' => 'nullable|integer|min:1',
+            // 'min_amount' => 'nullable|numeric|min:0', // Jika Anda masih ingin menggunakan 'min_amount', tambahkan di form HTML
         ]);
 
         try {
-            // Opsi 1: Tanpa transaksi
-            // $discount->update($validatedData);
-
-            // Opsi 2: Dengan transaksi database
             DB::beginTransaction();
-            $discount->update($validatedData);
+
+            // Mapping data dari nama input form ke nama kolom database (jika berbeda)
+            $discount->update([
+                'name'         => $validatedData['name'],
+                'code'         => $validatedData['kode_diskon'],
+                'type'         => $validatedData['tipe_diskon'],
+                'value'        => $validatedData['nilai_diskon'],
+                'starts_at'    => $validatedData['tanggal_mulai'],
+                'expires_at'   => $validatedData['tanggal_berakhir'],
+                'max_uses'     => $validatedData['batas_penggunaan'],
+                // 'min_amount' => $validatedData['min_amount'] ?? null, // Sesuaikan jika 'min_amount' ada di form
+            ]);
+
             DB::commit();
 
             return redirect()->route('admin.discounts.index')
@@ -200,10 +218,6 @@ class DiscountController extends Controller
         // $this->authorize('delete', $discount);
 
         try {
-            // Opsi 1: Tanpa transaksi
-            // $discount->delete();
-
-            // Opsi 2: Dengan transaksi database
             DB::beginTransaction();
             $discount->delete();
             DB::commit();
