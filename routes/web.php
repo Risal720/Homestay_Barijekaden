@@ -10,6 +10,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ReservationController; // <<<<<<< PASTIKAN INI ADA
 
 use Illuminate\Support\Facades\Route; // Pastikan ini ada
 
@@ -54,10 +55,15 @@ Route::get('/settings', function () {
     return view('settings', ['title' => 'Settings']);
 })->name('admin.settings'); // middleware('auth') DIHAPUS
 
-// Rute Halaman Reservasi
+// Rute Halaman Reservasi (INI ADALAH HALAMAN DAFTAR RESERVASI DI DASHBOARD)
+// Jika Anda ingin menggunakan 'admin.reservations.index' dari Route::resource,
+// maka rute ini bisa dihapus atau diganti dengan redirect.
+// Untuk saat ini, biarkan saja jika Anda ingin URL '/reservation' tetap berfungsi
+// sebagai tampilan daftar reservasi yang sama dengan admin.reservations.index.
 Route::get('/reservation', function () {
     return view('reservation', ['title' => 'Reservation']);
 })->name('reservation');
+
 
 // Rute Otentikasi (Login dan Registrasi)
 Route::get('/login', [AuthController::class, 'login'])->name('login'); // Menampilkan form login (view home)
@@ -110,4 +116,7 @@ Route::prefix('admin')->name('admin.')->group(function () { // middleware('auth'
 
     // Resource Route untuk Manajemen Diskon
     Route::resource('discounts', DiscountController::class);
+
+    // Resource Route untuk Manajemen Reservasi <<<<<<< TAMBAHAN UNTUK RESERVASI
+    Route::resource('reservations', ReservationController::class);
 });

@@ -78,10 +78,11 @@
                 <h2 class="text-3xl font-bold text-gray-800">Manajemen Reservasi</h2>
                 <p class="text-gray-500 mt-1">Kelola semua reservasi pelanggan di sini.</p>
             </div>
-            <button class="mt-4 md:mt-0 bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg shadow-md flex items-center transition duration-300">
+            <!-- TOMBOL TAMBAH RESERVASI YANG SUDAH DIPERBAIKI -->
+            <a href="{{ route('admin.reservations.create') }}" class="mt-4 md:mt-0 bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg shadow-md flex items-center transition duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
                 Tambah Reservasi
-            </button>
+            </a>
         </div>
 
         <!-- Summary Cards -->
@@ -189,25 +190,25 @@
                                 <button class="text-red-600 hover:text-red-900">Hapus</button>
                             </td>
                         </tr>
-                         <!-- Item 5 -->
-                         <tr class="bg-white hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">Eko Prasetyo</td>
-                            <td class="px-6 py-4">089956781234</td>
-                            <td class="px-6 py-4">12 Jun 2025, 19:30</td>
-                            <td class="px-6 py-4 text-center">3</td>
-                            <td class="px-6 py-4 text-center">
-                                <span class="status-badge status-cancelled">Dibatalkan</span>
-                            </td>
-                            <td class="px-6 py-4 text-center flex justify-center space-x-2">
-                                <button class="text-blue-600 hover:text-blue-900">Edit</button>
-                                <button class="text-red-600 hover:text-red-900">Hapus</button>
-                            </td>
-                        </tr>
+                           <!-- Item 5 -->
+                           <tr class="bg-white hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">Eko Prasetyo</td>
+                                <td class="px-6 py-4">089956781234</td>
+                                <td class="px-6 py-4">12 Jun 2025, 19:30</td>
+                                <td class="px-6 py-4 text-center">3</td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="status-badge status-cancelled">Dibatalkan</span>
+                                </td>
+                                <td class="px-6 py-4 text-center flex justify-center space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-900">Edit</button>
+                                    <button class="text-red-600 hover:text-red-900">Hapus</button>
+                                </td>
+                           </tr>
                     </tbody>
                 </table>
             </div>
             <!-- Pagination -->
-             <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+               <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
                 <div class="flex flex-1 justify-between sm:hidden">
                   <a href="#" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
                   <a href="#" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
