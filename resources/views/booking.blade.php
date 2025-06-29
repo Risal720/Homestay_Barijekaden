@@ -44,8 +44,6 @@
                 width: 100%; /* Responsive width */
                 margin-top: 3rem; /* Space from the top */
                 margin-bottom: 3rem; /* Space from the bottom */
-                /* Tidak perlu margin-left/right: auto; karena body sudah align-items: center */
-
             }
 
             .form-title {
@@ -107,14 +105,14 @@
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
                 /* Responsive grid for name fields */
-                gap: 2rem; /* Sudah diubah menjadi 2rem pada jawaban sebelumnya */
+                gap: 2rem; /* Ini sudah 2rem, harusnya ada jarak yang jelas */
             }
 
             .form-group .date-select-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
                 /* Responsive grid for date dropdowns */
-                gap: 2rem; /* <--- Diubah menjadi 2rem untuk jarak yang lebih jelas */
+                gap: 2rem; /* Ini juga sudah 2rem, harusnya ada jarak */
             }
 
             /* Custom styling for select arrows */
