@@ -39,6 +39,14 @@ Route::get('/about', function () {
     return view('about', ['title' => 'About Us']);
 })->name('about');
 
+Route::get('/profile', function () {
+    return view('profile');
+})->name('profile');
+
+Route::get('/setting', function () {
+    return view('setting');
+})->name('setting');
+
 // Rute Dashboard Utama
 // PENTING: Middleware 'auth' DIHAPUS agar bisa diakses tanpa login (HANYA UNTUK DEVELOPMENT!).
 // KEMBALIKAN INI UNTUK APLIKASI PRODUKSI!
