@@ -315,7 +315,7 @@
             </a>
         </div>
         <div class="navbar-title">Profil</div>
-        <a href="#" class="navbar-button">Kembali</a>
+        <a href="/" class="navbar-button">Kembali</a>
     </nav>
 
     <div class="profile-card">
