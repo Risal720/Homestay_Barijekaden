@@ -10,7 +10,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\ReservationController; // <<<<<<< PASTIKAN INI ADA
+use App\Http\Controllers\ReservationController; // Pastikan ini ada
+use App\Http\Controllers\UserController; // <<<--- BARU DITAMBAHKAN: Untuk Manajemen Pengguna. Sesuaikan jika Anda punya AdminUserController
 
 use Illuminate\Support\Facades\Route; // Pastikan ini ada
 
@@ -90,10 +91,10 @@ Route::prefix('admin')->name('admin.')->group(function () { // middleware('auth'
 
     // Resource Route untuk Manajemen Kamar (akan membuat rute CRUD standar)
     // Ini akan membuat:
-    // GET /admin/rooms          -> AdminRoomController@index   -> admin.rooms.index
-    // GET /admin/rooms/create   -> AdminRoomController@create  -> admin.rooms.create  <-- Ini yang akan menampilkan form Anda
-    // POST /admin/rooms         -> AdminRoomController@store   -> admin.rooms.store   <-- Ini yang akan menerima data dari form Anda
-    // GET /admin/rooms/{room}   -> AdminRoomController@show    -> admin.rooms.show
+    // GET /admin/rooms          -> AdminRoomController@index  -> admin.rooms.index
+    // GET /admin/rooms/create   -> AdminRoomController@create -> admin.rooms.create  <-- Ini yang akan menampilkan form Anda
+    // POST /admin/rooms         -> AdminRoomController@store  -> admin.rooms.store   <-- Ini yang akan menerima data dari form Anda
+    // GET /admin/rooms/{room}   -> AdminRoomController@show   -> admin.rooms.show
     // ...dan rute edit, update, destroy lainnya
     Route::resource('rooms', AdminRoomController::class);
 
@@ -108,6 +109,14 @@ Route::prefix('admin')->name('admin.')->group(function () { // middleware('auth'
     // Resource Route untuk Manajemen Pesanan
     Route::resource('orders', OrderController::class);
 
+    // Resource Route untuk Manajemen Pengguna
+    // Ini akan membuat rute CRUD standar untuk user management:
+    // GET /admin/users           -> UserController@index -> admin.users.index
+    // GET /admin/users/create    -> UserController@create -> admin.users.create
+    // POST /admin/users          -> UserController@store -> admin.users.store
+    // ... dan seterusnya
+    Route::resource('users', UserController::class); // <<<--- BARU DITAMBAHKAN
+
     // Rute untuk Laporan (misalnya, laporan penjualan)
     Route::get('reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
 
@@ -117,6 +126,6 @@ Route::prefix('admin')->name('admin.')->group(function () { // middleware('auth'
     // Resource Route untuk Manajemen Diskon
     Route::resource('discounts', DiscountController::class);
 
-    // Resource Route untuk Manajemen Reservasi <<<<<<< TAMBAHAN UNTUK RESERVASI
+    // Resource Route untuk Manajemen Reservasi
     Route::resource('reservations', ReservationController::class);
 });
