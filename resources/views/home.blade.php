@@ -19,6 +19,7 @@
                 min-height: 100vh;
                 /* Memastikan halaman mengisi seluruh tinggi viewport */
                 position: relative;
+                
             }
 
             /* Kelas untuk lapisan latar belakang dinamis */
@@ -99,7 +100,7 @@
 
             <!-- Div untuk kotak deskripsi berwarna oranye -->
             <!-- Mengatur margin atas 4rem, latar belakang oranye, sudut membulat, padding, lebar responsif, dan item terpusat -->
-            <div class="mt-55 bg-[#00000061] rounded-lg p-8 max-w-full flex items-center justify-center min-h-[150px]">
+            <div class="mt-20 bg-[#00000061] rounded-lg p-8 max-w-full flex items-center justify-center min-h-[150px]">
                 <!-- Div untuk teks "deskripsi" di dalam kotak oranye -->
                 <div class="text-white text-l font-medium text-center">
                     Rasakan pengalaman menginap tak terlupakan di BARIJEKADEN Homestay, yang terletak di kawasan
