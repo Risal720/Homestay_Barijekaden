@@ -1,440 +1,172 @@
 <x-layout>
 
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Halaman Login/Register</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
         <style>
+            /* Gaya dasar untuk body */
             body {
                 font-family: 'Inter', sans-serif;
-                /* Using Inter font */
+                /* Font dasar untuk seluruh body */
                 margin: 0;
                 padding: 0;
-                color: #333;
-                display: flex;
-                flex-direction: column;
-                /* Set flex direction to column */
-                align-items: center;
-                /* Center horizontally */
-                min-height: 100vh;
-                position: relative;
-                /* Needed for z-index of background */
+                box-sizing: border-box;
                 overflow: hidden;
-                /* Prevent scrollbars from background */
+                /* Mencegah scrollbar jika gambar latar belakang lebih besar */
+                color: #fff;
+                /* Warna teks putih agar kontras dengan latar belakang gelap */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                /* Memastikan halaman mengisi seluruh tinggi viewport */
+                position: relative;
             }
 
-            /* Custom message box style */
-            #messageBox {
-                position: fixed;
-                top: 1rem;
-                /* Distance from top */
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: #4CAF50;
-                /* Default green for success */
-                color: white;
-                padding: 0.75rem 1.5rem;
-                border-radius: 0.5rem;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                z-index: 1000;
-                opacity: 0;
-                transition: opacity 0.3s ease-in-out;
-                display: none;
-                /* Hidden by default */
-                text-align: center;
-            }
-
-            /* Background slideshow container */
-            .background-slideshow {
-                position: fixed;
+            /* Kelas untuk lapisan latar belakang dinamis */
+            .background-layer {
+                position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
-                z-index: -1;
-                /* Place behind other content */
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
-                animation: slideshow 30s infinite;
-                /* 3 images * 10 seconds = 30s cycle */
-                transition: background-image 1s ease-in-out;
-                /* Smooth transition for image change */
+                opacity: 0;
+                /* Mulai tersembunyi */
+                transition: opacity 5s ease-in-out;
+                /* Transisi halus untuk perubahan opacity */
+                z-index: -2;
+                /* Ditempatkan di belakang overlay dan konten */
             }
 
-            /* Keyframes for the background slideshow animation */
-            @keyframes slideshow {
-                0% {
-                    background-image: url('image/orang.png');
-                    opacity: 1;
-                }
-
-                /* Image 1 */
-                10% {
-                    opacity: 1;
-                }
-
-                /* Hold image 1 */
-                23% {
-                    opacity: 0;
-                }
-
-                /* Fade out image 1 */
-                25% {
-                    background-image: url('image/room.png');
-                    opacity: 0;
-                }
-
-                /* Switch to image 2 */
-                33% {
-                    opacity: 1;
-                }
-
-                /* Fade in image 2 */
-                43% {
-                    opacity: 1;
-                }
-
-                /* Hold image 2 */
-                56% {
-                    opacity: 0;
-                }
-
-                /* Fade out image 2 */
-                58% {
-                    background-image: url('image/view.png');
-                    opacity: 0;
-                }
-
-                /* Switch to image 3 */
-                66% {
-                    opacity: 1;
-                }
-
-                /* Fade in image 3 */
-                76% {
-                    opacity: 1;
-                }
-
-                /* Hold image 3 */
-                89% {
-                    opacity: 0;
-                }
-
-                /* Fade out image 3 */
-                91% {
-                    background-image: url('image/view2.png');
-                    opacity: 0;
-                }
-
-                /* Switch back to image 1 */
-                100% {
-                    opacity: 1;
-                }
-
-                /* Fade in image 1 for next cycle */
+            /* Lapisan pertama dimulai dengan opacity 1 agar terlihat */
+            #background-layer-1 {
+                opacity: 1;
             }
 
-
-            .container {
-                background-color: #fff;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                width: 300px;
-                margin-top: 20vh;
-                /* Changed from 10vh to 20vh to move it down */
-                margin-bottom: auto;
-                /* Ensure container stays centered if other content below */
-                position: relative;
-                /* Ensure it's above the background */
-                z-index: 1;
-                /* Place above the background slideshow */
+            /* Kelas kustom untuk efek text-shadow */
+            .text-shadow-md {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             }
 
-            h2 {
-                text-align: center;
-                margin-bottom: 20px;
+            .text-shadow-lg {
+                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
             }
 
-            .form-group {
-                margin-bottom: 15px;
+            .text-shadow-sm {
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
-            .form-group label {
-                display: block;
-                margin-bottom: 5px;
+            /* Kelas kustom untuk font Playfair Display */
+            .font-playfair {
+                font-family: 'Playfair Display', serif;
             }
 
-            .form-group input {
-                width: 100%;
-                padding: 8px 10px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                box-sizing: border-box;
+            .homestay-title-font {
+                font-size: 50px;
+                font-family: "Norican", cursive;
+                font-style: normal;
             }
 
-            .form-group button {
-                width: 100%;
-                padding: 10px;
-                background-color: #5c3d2e;
-                /* Brown color */
-                color: #fff;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                display: block;
-                text-align: center;
-            }
-
-            .form-group button:hover {
-                background-color: #73513d;
-                /* Darker brown */
-            }
-
-            .form-group .error-message {
-                color: red;
-                font-size: 0.9em;
-                margin-top: 5px;
-            }
-
-            .switch-form {
-                text-align: center;
-                margin-top: 15px;
-                font-size: 0.9em;
-            }
-
-            .switch-form a {
-                color: #5c3d2e;
-                text-decoration: none;
-            }
-
-            .switch-form a:hover {
-                text-decoration: underline;
-            }
-
-            .google-login-button {
-                background-color: #fff;
-                /* White background for Google button */
-                color: #757575;
-                /* Gray text color for Google */
-                border: 1px solid #dadada;
-                /* Light gray border */
-                padding: 10px;
-                border-radius: 4px;
-                cursor: pointer;
-                display: block;
-                width: 100%;
-                text-align: center;
-                margin-top: 10px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                /* Soft shadow */
-            }
-
-            .google-login-button:hover {
-                background-color: #f7f7f7;
-                /* Slightly darker on hover */
-            }
-
-            .google-icon {
-                width: 20px;
-                height: 20px;
-                margin-right: 10px;
-                /* Space between icon and text */
+            .text-shadow-custom {
+                text-shadow: 8px 8px 32px rgb(0, 0, 0);
+                /* Bayangan teks: offset-x, offset-y, blur-radius, warna (putih, opacity 0.8) */
             }
         </style>
     </head>
 
-    <body>
-        <div class="background-slideshow"></div>
+    <body class="m-0 p-0 box-border overflow-hidden text-white flex justify-center items-center min-h-screen relative">
+        <!-- Dua lapisan untuk latar belakang yang akan saling cross-fade -->
+        <div id="background-layer-1" class="background-layer"></div>
+        <div id="background-layer-2" class="background-layer"></div>
 
-        <div id="messageBox"
-            class="fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 ease-in-out opacity-0"
-            style="display: none;">
+        <!-- Overlay gelap untuk kontras, ditempatkan di belakang konten tetapi di atas lapisan background -->
+        <div class="absolute inset-0 w-full h-full bg-black/40 -z-20"></div>
+
+        <!-- Container utama untuk konten teks -->
+        <div class="mt-4 flex flex-col items-center justify-center">
+            <!-- Div untuk margin atas 4rem seperti yang diminta -->
+            <div class="mt-50">
+                <!-- Div untuk teks "Welcome to" -->
+                <div class="text-3xl font-semibold text-center text-shadow-custom">
+                    Welcome to
+                </div>
+                <!-- Div untuk nama homestay -->
+                <div class="text-4xl font-semibold mt-2 text-center homestay-title-font text-shadow-custom">
+                    Barijekaden Homestay's
+                </div>
+            </div>
+
+            <!-- Div untuk kotak deskripsi berwarna oranye -->
+            <!-- Mengatur margin atas 4rem, latar belakang oranye, sudut membulat, padding, lebar responsif, dan item terpusat -->
+            <div class="mt-55 bg-[#00000061] rounded-lg p-8 max-w-full flex items-center justify-center min-h-[150px]">
+                <!-- Div untuk teks "deskripsi" di dalam kotak oranye -->
+                <div class="text-white text-l font-medium text-center">
+                    Rasakan pengalaman menginap tak terlupakan di BARIJEKADEN Homestay, yang terletak di kawasan
+                    pegunungan yang tenang dan dikelilingi hutan pinus yang mempesona. Kami hadirkan akomodasi yang
+                    nyaman dengan desain yang mengutamakan keindahan alam, menciptakan suasana hangat dan santai untuk
+                    setiap tamu. Manfaatkan berbagai fasilitas yang kami sediakan, mulai dari kamar-kamar dengan
+                    panorama yang menakjubkan, area outdoor yang asri, hingga kemudahan akses ke jalur hiking dan
+                    destinasi wisata alam. BARIJEKADEN adalah tempat yang tepat untuk mewujudkan liburan impian Anda,
+                    baik untuk bersantai, berpetualang, maupun menikmati keindahan alam pegunungan yang menyegarkan.
+                </div>
+            </div>
         </div>
 
-        <main class="flex-grow flex flex-col items-center justify-center p-4">
-            <div class="container" id="login-form">
-                <h2>Login</h2>
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" placeholder="Masukkan username Anda">
-                    <div id="username-error" class="error-message"></div>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Masukkan password Anda">
-                    <div id="password-error" class="error-message"></div>
-                </div>
-                <div class="form-group">
-                    <button id="login-button">Login</button>
-                </div>
-                <div class="form-group">
-                    <button class="google-login-button" id="google-login-button">
-                        <svg class="google-icon" viewBox="0 0 24 24">
-                            <path fill="#4285F4"
-                                d="M22.75 12.25c0-.8-.06-1.55-.18-2.25H12v4.25h6.25c-.25 1.5-1.1 2.75-2.5 3.5v2.75h3.5c2.05-1.9 3.25-4.7 3.25-8.25z" />
-                            <path fill="#34A853"
-                                d="M12 23.5c3.25 0 6.05-1.05 8.05-3.22l-3.5-2.75c-1.05.7-2.45 1.12-4.55 1.12-3.55 0-6.55-2.4-7.65-5.62H.85v2.88c2.15 4.25 6.4 7.25 11.15 7.25z" />
-                            <path fill="#FBBC05"
-                                d="M4.35 14.25c-.25-.7-.38-1.45-.38-2.25s.13-1.55.38-2.25V7.05H.85C.3 8.15 0 9.65 0 12s.3 3.85.85 4.95l3.5-2.7z" />
-                            <path fill="#EA4335"
-                                d="M12 4.75c1.8 0 3.4.65 4.65 1.85l3.15-3.15C17.95 1.45 15.25 0 12 0 7.25 0 3 2.75.85 7.05l3.5 2.7c1.1-3.25 4.1-5.55 7.65-5.55z" />
-                        </svg>
-                        <span>Login with Google</span>
-                    </button>
-                </div>
-                <div class="switch-form">
-                    <a href="#" id="switch-to-register">Belum punya akun? Daftar di sini</a>
-                </div>
-            </div>
-
-            <div class="container" id="register-form" style="display: none;">
-                <h2>Register</h2>
-                <div class="form-group">
-                    <label for="register-name">Nama</label>
-                    <input type="text" id="register-name" name="name" placeholder="Masukkan nama Anda">
-                    <div id="register-name-error" class="error-message"></div>
-                </div>
-                <div class="form-group">
-                    <label for="register-email">Email</label>
-                    <input type="email" id="register-email" name="email" placeholder="Masukkan email Anda">
-                    <div id="register-email-error" class="error-message"></div>
-                </div>
-                <div class="form-group">
-                    <label for="register-password">Password</label>
-                    <input type="password" id="register-password" name="password" placeholder="Masukkan password Anda">
-                    <div id="register-password-error" class="error-message"></div>
-                </div>
-                <div class="form-group">
-                    <button id="register-button">Register</button>
-                </div>
-                <div class="switch-form">
-                    <a href="#" id="switch-to-login">Sudah punya akun? Login di sini</a>
-                </div>
-            </div>
-        </main>
-
         <script>
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            const switchToRegisterLink = document.getElementById('switch-to-register');
-            const switchToLoginLink = document.getElementById('switch-to-login');
-            const loginButton = document.getElementById('login-button');
-            const registerButton = document.getElementById('register-button');
-            const googleLoginButton = document.getElementById('google-login-button');
+            // Daftar path gambar latar belakang Anda.
+            // Ganti URL placeholder ini dengan path gambar Anda yang sebenarnya.
+            // Pastikan path ini benar relatif terhadap file HTML Anda.
+            const backgroundImages = [
+                'image/view2.png',
+                'image/orang.png',
+                'image/room.png',
+                'image/view3.png',
+                'image/view.png',
+                'image/view4.png',
+                'image/view2.png',
+                'image/view5.png',
+                'image/fasilitasimg/gazebo.png', // Contoh gambar dari subfolder 'fasilitasimg'
+                'image/fasilitasimg/kolam.png',
+                'image/fasilitasimg/meetingroom.png', // Contoh placeholder jika Anda masih ingin menggunakannya
+                'image/fasilitasimg/parkiran.png',
+                'image/fasilitasimg/restoran.png'
+            ];
 
-            // Function to display custom messages
-            function showMessage(message, type = 'success') {
-                const messageBox = document.getElementById('messageBox');
-                messageBox.textContent = message;
-                messageBox.classList.remove('bg-green-500', 'bg-red-500'); // Remove previous color classes
-                if (type === 'success') {
-                    messageBox.classList.add('bg-green-500');
-                } else if (type === 'error') {
-                    messageBox.classList.add('bg-red-500');
-                }
-                messageBox.style.display = 'block'; // Show element
-                setTimeout(() => {
-                    messageBox.classList.remove('opacity-0');
-                    messageBox.classList.add('opacity-100');
-                }, 10); // Small delay for transition
+            // ,'https://placehold.co/1920x1080/9C27B0/FFFFFF?text=Pemandangan+Hutan+4'
+            let currentImageIndex = 0; // Mulai dari indeks 0 untuk looping sequential
+            let currentLayer = document.getElementById('background-layer-1'); // Lapisan yang sedang aktif
+            let nextLayer = document.getElementById('background-layer-2'); // Lapisan berikutnya
 
-                setTimeout(() => {
-                    messageBox.classList.remove('opacity-100');
-                    messageBox.classList.add('opacity-0');
-                    setTimeout(() => {
-                        messageBox.style.display = 'none'; // Hide after transition completes
-                    }, 300); // Match CSS transition duration
-                }, 3000); // Message will disappear after 3 seconds
+            // Fungsi untuk mengubah latar belakang secara berurutan dengan efek fade
+            function changeSequentialBackground() {
+                // Hitung indeks gambar berikutnya
+                currentImageIndex = (currentImageIndex + 1) % backgroundImages.length;
+
+                const imageUrl = backgroundImages[currentImageIndex];
+
+                // Atur gambar baru pada lapisan yang saat ini tidak terlihat
+                nextLayer.style.backgroundImage = `url('${imageUrl}')`;
+
+                // Mulai transisi: lapisan saat ini memudar keluar, lapisan berikutnya memudar masuk
+                currentLayer.style.opacity = '0';
+                nextLayer.style.opacity = '1';
+
+                // Tukar referensi lapisan untuk siklus berikutnya
+                // currentLayer akan menjadi nextLayer yang baru saja terlihat, dan sebaliknya
+                [currentLayer, nextLayer] = [nextLayer, currentLayer];
             }
 
-            // Event listener to switch to register form
-            switchToRegisterLink.addEventListener('click', (event) => {
-                event.preventDefault();
-                loginForm.style.display = 'none';
-                registerForm.style.display = 'block';
-            });
+            // Jalankan fungsi saat halaman dimuat pertama kali
+            window.onload = function() {
+                // Set gambar pertama pada lapisan awal
+                currentLayer.style.backgroundImage =
+                    `url('${backgroundImages[0] || 'https://placehold.co/1920x1080/CCCCCC/000000?text=Initial+Background'}')`;
 
-            // Event listener to switch to login form
-            switchToLoginLink.addEventListener('click', (event) => {
-                event.preventDefault();
-                registerForm.style.display = 'none';
-                loginForm.style.display = 'block';
-            });
-
-            // Event listener for login button click
-            loginButton.addEventListener('click', () => {
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                let hasErrors = false;
-
-                document.getElementById('username-error').textContent = '';
-                document.getElementById('password-error').textContent = '';
-
-                if (!username) {
-                    document.getElementById('username-error').textContent = 'Username harus diisi';
-                    hasErrors = true;
-                }
-
-                if (!password) {
-                    document.getElementById('password-error').textContent = 'Password harus diisi';
-                    hasErrors = true;
-                }
-
-                if (!hasErrors) {
-                    // Simulate API login (replace with actual fetch() call)
-                    console.log('Melakukan login dengan:', username, password);
-                    showMessage(`Berhasil login dengan username: ${username}`, 'success');
-                } else {
-                    showMessage('Login gagal. Harap periksa input Anda.', 'error');
-                }
-            });
-
-            // Event listener for register button click
-            registerButton.addEventListener('click', () => {
-                const name = document.getElementById('register-name').value;
-                const email = document.getElementById('register-email').value;
-                const password = document.getElementById('register-password').value;
-                let hasErrors = false;
-
-                document.getElementById('register-name-error').textContent = '';
-                document.getElementById('register-email-error').textContent = '';
-                document.getElementById('register-password-error').textContent = '';
-
-                if (!name) {
-                    document.getElementById('register-name-error').textContent = 'Nama harus diisi';
-                    hasErrors = true;
-                }
-                if (!email) {
-                    document.getElementById('register-email-error').textContent = 'Email harus diisi';
-                    hasErrors = true;
-                }
-                if (!password) {
-                    document.getElementById('register-password-error').textContent = 'Password harus diisi';
-                    hasErrors = true;
-                }
-
-                if (!hasErrors) {
-                    // Simulate API register (replace with actual fetch() call)
-                    console.log('Melakukan registrasi dengan:', name, email, password);
-                    showMessage(`Berhasil mendaftar dengan nama: ${name} dan email: ${email}`, 'success');
-                } else {
-                    showMessage('Registrasi gagal. Harap periksa input Anda.', 'error');
-                }
-            });
-
-            // Event listener for Google login button click
-            googleLoginButton.addEventListener('click', () => {
-                console.log('Memulai proses login dengan Google');
-                showMessage('Fitur Login dengan Google belum diimplementasikan. Harap gunakan tombol Login biasa.',
-                    'error');
-            });
+                // Ubah latar belakang setiap 1 detik (1000 milidetik)
+                // Durasi interval harus lebih lama dari durasi transisi (0.5s)
+                setInterval(changeSequentialBackground, 5000);
+            };
         </script>
     </body>
 </x-layout>
