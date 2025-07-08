@@ -103,8 +103,6 @@
                     <span class="text-xs">Tersedia</span>
                     <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
                     <span class="text-xs">Tidak Tersedia</span>
-                    <div class="w-4 h-4 bg-purple-600 rounded-full"></div>
-                    <span class="text-xs">Yang Dipilih</span>
                 </div>
             </div>
         </div>
