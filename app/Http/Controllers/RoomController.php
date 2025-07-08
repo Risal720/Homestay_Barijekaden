@@ -2,70 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
-use App\Models\RoomPrefix; // TAMBAHKAN INI
+use App\Models\Room; // Pastikan model Room diimport
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Str; // Pastikan Str diimport jika digunakan (meskipun tidak langsung di sini, sering digunakan)
 
 class RoomController extends Controller
 {
+    /**
+     * Menampilkan daftar semua kamar yang tersedia untuk publik.
+     * Ini adalah metode untuk rute '/rooms'.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
+        // Ambil semua kamar yang ingin Anda tampilkan di halaman publik
+        // Sesuaikan query ini jika Anda memiliki filter atau pagination
         $rooms = Room::all();
-        // Ambil semua RoomPrefix dari database
-        $roomPrefixes = RoomPrefix::all(); // UBAH INI
 
-        return view('admin.rooms.index', compact('rooms', 'roomPrefixes'));
+        // Mengembalikan view untuk daftar kamar publik (misalnya, rooms.blade.php)
+        // Pastikan Anda memiliki file view di resources/views/rooms.blade.php
+        // Atau jika Anda menggunakan subfolder, misalnya resources/views/rooms/index.blade.php,
+        // maka gunakan 'rooms.index'
+        return view('rooms', compact('rooms'));
     }
 
-    // ... metode show, create, dll.
-
-    public function store(Request $request)
+    /**
+     * Menampilkan detail satu kamar tertentu untuk publik.
+     * Ini adalah metode untuk rute '/rooms/{room:slug}'.
+     *
+     * @param  \App\Models\Room  $room
+     * @return \Illuminate\View\View
+     */
+    public function show(Room $room)
     {
-        // ... (kode store Room Anda yang sudah ada) ...
+        // Logika untuk menampilkan detail kamar
+        return view('rooms.show', compact('room'));
     }
 
-    // Tambahkan metode untuk mengelola RoomPrefixes
-    public function storeUpdateRoomPrefix(Request $request)
-    {
-        $validatedData = $request->validate([
-            'prefix_name' => 'required|string|max:10|unique:room_prefixes,prefix,' . $request->input('id'), // id digunakan untuk update
-            'max_limit_value' => 'required|integer|min:1',
-        ]);
-
-        // Cek apakah prefix sudah ada
-        $roomPrefix = RoomPrefix::where('prefix', $validatedData['prefix_name'])->first();
-
-        if ($roomPrefix) {
-            // Update yang sudah ada
-            $roomPrefix->update([
-                'max_limit' => $validatedData['max_limit_value'],
-            ]);
-            $message = 'Awalan kode kamar berhasil diperbarui!';
-        } else {
-            // Buat baru
-            RoomPrefix::create([
-                'prefix' => $validatedData['prefix_name'],
-                'max_limit' => $validatedData['max_limit_value'],
-                'next_number' => 1, // Atur nilai awal untuk next_number
-            ]);
-            $message = 'Awalan kode kamar berhasil ditambahkan!';
-        }
-
-        return redirect()->route('admin.rooms.index')->with('success', $message);
-    }
-
-    public function destroyRoomPrefix(RoomPrefix $roomPrefix)
-    {
-        try {
-            // Anda mungkin ingin menambahkan logika untuk memeriksa apakah ada kamar yang menggunakan prefix ini
-            // sebelum menghapusnya, atau menghapus kode kamar terkait.
-            // Contoh:
-            // RoomCode::where('prefix_id', $roomPrefix->id)->delete(); // Hapus kode kamar yang terkait
-            $roomPrefix->delete();
-            return redirect()->route('admin.rooms.index')->with('success', 'Awalan kode kamar berhasil dihapus!');
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => 'Gagal menghapus awalan kode kamar: ' . $e->getMessage()]);
-        }
-    }
+    // PENTING: PASTIKAN TIDAK ADA KODE LAIN DI BAWAH INI.
+    // Tidak ada definisi kelas lain (seperti AdminRoomController) di sini.
+    // Tidak ada metode CRUD admin (store, create, edit, update, destroy) di sini.
+    // Metode-metode tersebut harus berada di AdminRoomController.php.
 }
