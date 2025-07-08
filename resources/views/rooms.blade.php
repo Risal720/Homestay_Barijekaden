@@ -6,16 +6,29 @@
 
         .side-photo {
             position: fixed;
-            top: 9.3rem;
+            top: 4rem; /* Sesuaikan dengan tinggi header Anda */
             bottom: 0;
             width: 150px;
-            background-color: #f08080;
+            background-color: #ffffff;
             color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10;
+            overflow: hidden;
+            /* Perubahan: 'position: relative;' dihapus karena tidak lagi diperlukan untuk satu lapisan gambar */
         }
+
+        .side-photo img {
+            /* Perubahan: Properti 'position: absolute;', 'top: 0;', 'left: 0;' dihapus */
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Menggunakan 'contain' agar seluruh gambar terlihat */
+            opacity: 1; /* Perubahan: Atur opacity awal ke 1 (terlihat) */
+            transition: opacity 1s ease-in-out; /* Perubahan: Tambahkan transisi untuk opacity */
+        }
+
+        /* Perubahan: Aturan CSS '.side-photo img.active' dihapus */
 
         .side-photo-left {
             left: 0;
@@ -44,7 +57,8 @@
         }
 
         .room-image {
-            background-color: #90ee90; /* Placeholder background */
+            background-color: #90ee90;
+            /* Placeholder background */
             aspect-ratio: 16 / 9;
             display: flex;
             justify-content: center;
@@ -52,12 +66,15 @@
             color: #333;
             font-size: 0.8rem;
             border-radius: 0.25rem;
-            overflow: hidden; /* Ensure image fits */
+            overflow: hidden;
+            /* Ensure image fits */
         }
+
         .room-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Cover the area without distortion */
+            object-fit: cover;
+            /* Cover the area without distortion */
         }
 
 
@@ -171,15 +188,17 @@
     </style>
 
     <div class="body">
-        <div class="side-photo side-photo-left">FOTO BERGANTIAN</div>
+        <div class="side-photo side-photo-left">
+            <!-- Perubahan: Hanya satu lapisan gambar per sisi -->
+            <img id="sidePhotoLeft" alt="Side Photo Left">
+        </div>
         <div class="content-area ">
 
             @foreach ($rooms as $room)
                 <div class="room-card relative">
                     <div class="room-image">
                         @if ($room->foto_logo)
-                            <img src="{{ $room->foto_logo }}"
-                                alt="Foto Logo {{ $room->nama_room }}">
+                            <img src="{{ $room->foto_logo }}" alt="Foto Logo {{ $room->nama_room }}">
                         @else
                             <span class="text-gray-500">Tidak ada gambar</span>
                         @endif
@@ -210,7 +229,10 @@
 
         </div>
 
-        <div class="side-photo side-photo-right">FOTO BERGANTIAN</div>
+        <div class="side-photo side-photo-right">
+            <!-- Perubahan: Hanya satu lapisan gambar per sisi -->
+            <img id="sidePhotoRight" alt="Side Photo Right">
+        </div>
     </div>
 
     <script>
@@ -226,6 +248,51 @@
                     fullDetails.classList.toggle('hidden');
                 });
             });
+
+            const sidePhotoLeft = document.getElementById('sidePhotoLeft');
+            const sidePhotoRight = document.getElementById('sidePhotoRight');
+
+            const images = [
+                'image/view.png',
+                'image/view2.png',
+                'image/view3.png',
+                'image/view4.png',
+                'image/view5.png',
+            ];
+
+            let currentImageIndex = 0;
+            const transitionDuration = 1000; // Durasi transisi fade dalam milidetik (1 detik)
+            const displayDuration = 5000; // Total durasi tampilan gambar (5 detik)
+
+            function changeSidePhotosSequentially() {
+                // Langkah 1: Fade out gambar saat ini
+                sidePhotoLeft.style.opacity = 0;
+                sidePhotoRight.style.opacity = 0;
+
+                // Langkah 2: Setelah fade out selesai, ganti src dan fade in gambar baru
+                setTimeout(() => {
+                    // Tingkatkan indeks gambar untuk gambar berikutnya
+                    currentImageIndex++;
+                    if (currentImageIndex >= images.length) {
+                        currentImageIndex = 0; // Kembali ke awal jika sudah mencapai akhir array
+                    }
+
+                    // Ganti src gambar
+                    sidePhotoLeft.src = images[currentImageIndex];
+                    sidePhotoRight.src = images[currentImageIndex]; // Menggunakan gambar yang sama untuk kedua sisi
+
+                    // Fade in gambar baru
+                    sidePhotoLeft.style.opacity = 1;
+                    sidePhotoRight.style.opacity = 1;
+                }, transitionDuration); // Waktu tunggu sesuai durasi transisi CSS
+            }
+
+            // Panggil sekali saat dimuat untuk menampilkan gambar pertama dari urutan
+            // Ini akan langsung mengatur src dan opacity ke 1
+            changeSidePhotosSequentially();
+
+            // Ganti foto setiap 'displayDuration' milidetik secara berurutan dengan efek fade
+            setInterval(changeSidePhotosSequentially, displayDuration);
         });
     </script>
 
