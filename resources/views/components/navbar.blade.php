@@ -4,7 +4,7 @@
             <div class="flex items-center">
                 <div class="relative flex items-center">
                     <div class="shrink-0">
-                        <img class="size-10 mr-2" src="{{ asset('image/logo.png') }}" alt="Your Company">
+                        <img class="size-10 mr-2" src="https://placehold.co/40x40/432a0b/bf7029?text=Logo" alt="Your Company">
                     </div>
                     <a href="/">
                         <p class="text-[#bf7029] norican-regular">Barijekaden</p>
@@ -52,15 +52,15 @@
                             </div>
 
                             <!--
-                Dropdown menu, show/hide based on menu state.
+                                Dropdown menu, show/hide based on menu state.
 
-                Entering: "transition ease-out duration-100"
-                  From: "transform opacity-0 scale-95"
-                  To: "transform opacity-100 scale-100"
-                Leaving: "transition ease-in duration-75"
-                  From: "transform opacity-100 scale-100"
-                  To: "transform opacity-0 scale-95"
-              -->
+                                Entering: "transition ease-out duration-100"
+                                  From: "transform opacity-0 scale-95"
+                                  To: "transform opacity-100 scale-100"
+                                Leaving: "transition ease-in duration-75"
+                                  From: "transform opacity-100 scale-100"
+                                  To: "transform opacity-0 scale-95"
+                            -->
                             <div x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform"
                                 x-transition:enter-start="opacity-0 scale-95"
                                 x-transition:enter-end="opacity-100 scale-100"
@@ -75,7 +75,9 @@
                                     tabindex="-1" id="user-menu-item-0">Profile</a>
                                 <a href="/setting" class="block px-4 py-2 text-sm text-[#ffffff]" role="menuitem"
                                     tabindex="-1" id="user-menu-item-1">Settings</a>
-                                <a href="#" id="openOverlayLink" class="block px-4 py-2 text-sm text-[#ffffff]"
+                                <a href="/dashboard" class="block px-4 py-2 text-sm text-[#ffffff] hidden" role="menuitem"
+                                    tabindex="-1" id="desktopDashboardLink">Dashboard</a>
+                                <a href="#" id="desktopLoginLogoutLink" class="block px-4 py-2 text-sm text-[#ffffff]"
                                     role="menuitem" tabindex="-1" id="user-menu-item-2">Login</a>
                             </div>
                         </div>
@@ -129,8 +131,8 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <div class="text-base/5 font-medium text-white">User Name</div>
-                    <div class="text-sm font-medium text-[#bf7029]">Email User</div>
+                    <div class="text-base/5 font-medium text-white" id="mobileUserName">User Name</div>
+                    <div class="text-sm font-medium text-[#bf7029]" id="mobileUserEmail">Email User</div>
                 </div>
                 <button type="button"
                     class="relative ml-auto shrink-0 rounded-full bg-[#5e3d13] p-1 text-[#bf7029] hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#bf7029] focus:outline-hidden">
@@ -148,7 +150,10 @@
                     class="block rounded-md px-3 py-2 text-base font-medium text-[#bf7029] hover:bg-[#885318] hover:text-white">Profile</a>
                 <a href="/setting"
                     class="block rounded-md px-3 py-2 text-base font-medium text-[#bf7029] hover:bg-[#885318] hover:text-white">Settings</a>
-                <a href="#" id="openOverlayLink"
+                <a href="/dashboard"
+                    class="block rounded-md px-3 py-2 text-base font-medium text-[#bf7029] hover:bg-[#885318] hover:text-white hidden"
+                    id="mobileDashboardLink">Dashboard</a>
+                <a href="#" id="mobileLoginLogoutLink"
                     class="block rounded-md px-3 py-2 text-base font-medium text-[#bf7029] hover:bg-[#885318] hover:text-white">Login</a>
             </div>
         </div>
@@ -171,13 +176,13 @@
                 <!-- Login Form -->
                 <div id="loginForm" class="auth-form">
                     <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Masuk</h2>
-                    <form>
+                    <form id="loginSubmitForm">
                         <!-- Added placeholder-gray-500 class -->
-                        <input type="email" placeholder="Email"
+                        <input type="email" placeholder="Email" id="loginEmail"
                             class="input-field w-full py-3 px-4 border border-gray-300 rounded-lg mb-4 text-base transition-all duration-200 ease-in-out focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 placeholder-gray-500"
                             required>
                         <!-- Added placeholder-gray-500 class -->
-                        <input type="password" placeholder="Kata Sandi"
+                        <input type="password" placeholder="Kata Sandi" id="loginPassword"
                             class="input-field w-full py-3 px-4 border border-gray-300 rounded-lg mb-4 text-base transition-all duration-200 ease-in-out focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 placeholder-gray-500"
                             required>
                         <button type="submit"
@@ -212,17 +217,17 @@
                 <!-- Register Form (hidden by default) -->
                 <div id="registerForm" class="auth-form hidden">
                     <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Daftar</h2>
-                    <form>
+                    <form id="registerSubmitForm">
                         <!-- Added placeholder-gray-500 class -->
-                        <input type="email" placeholder="Email"
+                        <input type="email" placeholder="Email" id="registerEmail"
                             class="input-field w-full py-3 px-4 border border-gray-300 rounded-lg mb-4 text-base transition-all duration-200 ease-in-out focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 placeholder-gray-500"
                             required>
                         <!-- Added placeholder-gray-500 class -->
-                        <input type="password" placeholder="Kata Sandi"
+                        <input type="password" placeholder="Kata Sandi" id="registerPassword"
                             class="input-field w-full py-3 px-4 border border-gray-300 rounded-lg mb-4 text-base transition-all duration-200 ease-in-out focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 placeholder-gray-500"
                             required>
                         <!-- Added placeholder-gray-500 class -->
-                        <input type="password" placeholder="Konfirmasi Kata Sandi"
+                        <input type="password" placeholder="Konfirmasi Kata Sandi" id="registerConfirmPassword"
                             class="input-field w-full py-3 px-4 border border-gray-300 rounded-lg mb-4 text-base transition-all duration-200 ease-in-out focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 placeholder-gray-500"
                             required>
                         <button type="submit"
@@ -238,13 +243,21 @@
 
         <script>
             // Get references to DOM elements
-            const openOverlayLink = document.getElementById('openOverlayLink');
+            const desktopLoginLogoutLink = document.getElementById('desktopLoginLogoutLink');
+            const mobileLoginLogoutLink = document.getElementById('mobileLoginLogoutLink');
+            const desktopDashboardLink = document.getElementById('desktopDashboardLink');
+            const mobileDashboardLink = document.getElementById('mobileDashboardLink');
             const authOverlay = document.getElementById('authOverlay');
             const closeOverlayBtn = document.getElementById('closeOverlayBtn');
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
             const showRegisterLink = document.getElementById('showRegister');
             const showLoginLink = document.getElementById('showLogin');
+            const loginSubmitForm = document.getElementById('loginSubmitForm');
+            const registerSubmitForm = document.getElementById('registerSubmitForm');
+            const mobileUserName = document.getElementById('mobileUserName');
+            const mobileUserEmail = document.getElementById('mobileUserEmail');
+
             // Reference to html and body for overflow control
             const html = document.documentElement; // Refers to the <html> element
             const body = document.body; // Refers to the <body> element
@@ -275,8 +288,81 @@
                 loginForm.classList.remove('hidden');
             }
 
+            // Function to simulate login
+            function loginUser(username, email) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userName', username);
+                localStorage.setItem('userEmail', email);
+
+                // Simulate admin status for a specific email
+                if (email === 'admin@example.com') {
+                    localStorage.setItem('isAdmin', 'true');
+                } else {
+                    localStorage.removeItem('isAdmin'); // Ensure isAdmin is false for non-admin users
+                }
+
+                checkLoginStatus(); // Update UI after login
+                hideOverlay(); // Hide overlay after successful login
+            }
+
+            // Function to simulate logout
+            function logoutUser() {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('isAdmin'); // Also remove admin status on logout
+                checkLoginStatus(); // Update UI after logout
+                // Optionally redirect to home or login page
+                // window.location.href = '/';
+            }
+
+            // Function to check login status and update UI
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const isAdmin = localStorage.getItem('isAdmin') === 'true';
+                const userName = localStorage.getItem('userName') || 'User Name';
+                const userEmail = localStorage.getItem('userEmail') || 'Email User';
+
+                // Update desktop login/logout link
+                if (desktopLoginLogoutLink) {
+                    desktopLoginLogoutLink.textContent = isLoggedIn ? 'Logout' : 'Login';
+                    desktopLoginLogoutLink.onclick = isLoggedIn ? logoutUser : showOverlay;
+                }
+
+                // Update mobile login/logout link
+                if (mobileLoginLogoutLink) {
+                    mobileLoginLogoutLink.textContent = isLoggedIn ? 'Logout' : 'Login';
+                    mobileLoginLogoutLink.onclick = isLoggedIn ? logoutUser : showOverlay;
+                }
+
+                // Update desktop dashboard link visibility
+                if (desktopDashboardLink) {
+                    if (isLoggedIn && isAdmin) {
+                        desktopDashboardLink.classList.remove('hidden');
+                    } else {
+                        desktopDashboardLink.classList.add('hidden');
+                    }
+                }
+
+                // Update mobile dashboard link visibility
+                if (mobileDashboardLink) {
+                    if (isLoggedIn && isAdmin) {
+                        mobileDashboardLink.classList.remove('hidden');
+                    } else {
+                        mobileDashboardLink.classList.add('hidden');
+                    }
+                }
+
+                // Update mobile user info
+                if (mobileUserName) {
+                    mobileUserName.textContent = userName;
+                }
+                if (mobileUserEmail) {
+                    mobileUserEmail.textContent = userEmail;
+                }
+            }
+
             // Event Listeners
-            openOverlayLink.addEventListener('click', showOverlay);
             closeOverlayBtn.addEventListener('click', hideOverlay);
             showRegisterLink.addEventListener('click', showRegisterForm);
             showLoginLink.addEventListener('click', showLoginForm);
@@ -287,6 +373,47 @@
                     hideOverlay();
                 }
             });
+
+            // Handle login form submission
+            if (loginSubmitForm) {
+                loginSubmitForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
+                    const email = document.getElementById('loginEmail').value;
+                    const password = document.getElementById('loginPassword').value;
+                    // In a real application, you would send these credentials to a server for authentication.
+                    // For this example, we'll simulate a successful login.
+                    if (email && password) {
+                        loginUser(email.split('@')[0], email); // Use email prefix as username
+                    } else {
+                        console.log('Please enter email and password.');
+                    }
+                });
+            }
+
+            // Handle register form submission
+            if (registerSubmitForm) {
+                registerSubmitForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
+                    const email = document.getElementById('registerEmail').value;
+                    const password = document.getElementById('registerPassword').value;
+                    const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+                    if (password !== confirmPassword) {
+                        console.log('Passwords do not match.');
+                        return;
+                    }
+                    // In a real application, you would send these credentials to a server for registration.
+                    // For this example, we'll simulate a successful registration and then login.
+                    if (email && password) {
+                        loginUser(email.split('@')[0], email); // Simulate login after registration
+                    } else {
+                        console.log('Please fill in all registration fields.');
+                    }
+                });
+            }
+
+            // Initial check when the page loads
+            document.addEventListener('DOMContentLoaded', checkLoginStatus);
         </script>
     </div>
 </nav>
