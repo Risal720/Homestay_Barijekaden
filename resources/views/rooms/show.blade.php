@@ -1,8 +1,19 @@
 <x-layout>
-    <div class="bg-white rounded-md shadow-md overflow-hidden room-card">
+    {{-- Dua lapisan untuk latar belakang yang akan saling cross-fade --}}
+    <div id="background-layer-1" class="background-layer"></div>
+    <div id="background-layer-2" class="background-layer"></div>
+
+    {{-- Overlay gelap untuk kontras, ditempatkan di belakang konten tetapi di atas lapisan background --}}
+    {{-- Sesuaikan opasitas (misalnya bg-black/40) atau hapus jika tidak diperlukan --}}
+    <div class="absolute inset-0 w-full h-full bg-black/40 -z-10"></div> 
+
+    {{-- Tambahkan ID unik ke div utama untuk penargetan yang lebih mudah dengan latar belakang --}}
+    {{-- Ubah bg-white menjadi bg-white/80 agar background terlihat lebih jelas --}}
+    {{-- Menambahkan mt-16 (margin-top: 4rem) untuk menggeser konten ke bawah, menghindari navbar --}}
+    <div id="main-content-wrapper" class="bg-white/80 rounded-md shadow-md overflow-hidden room-card mt-16">
         <div class="grid grid-cols-1 md:grid-cols-2">
-            {{-- Left Section: Photo Area (Carousel) --}}
-            <div class="bg-gray-200 relative aspect-w-16 aspect-h-9 overflow-hidden">
+            {{-- Bagian Kiri: Area Foto (Carousel) --}}
+            <div class="bg-white relative aspect-w-16 aspect-h-9 overflow-hidden">
                 @if ($room->roomImages->isNotEmpty())
                     <div class="carousel-container absolute top-0 left-0 w-full h-full">
                         @foreach ($room->roomImages as $index => $image)
@@ -36,7 +47,7 @@
                         </div>
                     </div>
                 @else
-                    {{-- Placeholder if no detail images --}}
+                    {{-- Placeholder jika tidak ada gambar detail --}}
                     <div class="bg-blue-500 inset-0 flex items-center justify-center">
                         <div class="bg-brown-300 p-8 rounded-md">
                             <div class="relative">
@@ -55,7 +66,7 @@
                 @endif
             </div>
 
-            {{-- Right Section: Brief Information --}}
+            {{-- Bagian Kanan: Informasi Singkat --}}
             <div class="p-6">
                 <div class="mb-2">
                     <div class="bg-pink-300 text-white py-2 px-4 rounded-md inline-block">{{ $room->nama_room }}</div>
@@ -77,7 +88,7 @@
                             {{ $room->rating }}
                         </button>
                     @else
-                        <div></div> {{-- Placeholder if no rating --}}
+                        <div></div> {{-- Placeholder jika tidak ada rating --}}
                     @endif
                     <button class="bg-green-400 text-white py-2 px-4 rounded-md">PESAN</button>
                 </div>
@@ -90,7 +101,7 @@
                             } elseif ($roomCode->status == 'Tidak Tersedia') {
                                 $statusClass = 'bg-blue-500';
                             }
-                            // 'Yang Dipilih' status is handled client-side and not from admin
+                            // Status 'Yang Dipilih' ditangani di sisi klien dan bukan dari admin
                         @endphp
                         <button
                             class="{{ $statusClass }} text-white py-2 px-3 rounded-md text-xs">{{ $roomCode->code }}</button>
@@ -107,12 +118,12 @@
             </div>
         </div>
 
-        {{-- Bottom Section: Full Details --}}
+        {{-- Bagian Bawah: Detail Lengkap --}}
         <div class="mt-4 bg-cyan-500 p-8 text-center relative">
             <div class="room-full-details text-gray-700">
                 <h3 class="font-semibold text-lg mb-2">Detail Lengkap</h3>
                 <p>{{ $room->detail_room ?? 'Ini adalah detail lengkap untuk kamar ini...' }}</p>
-                {{-- You can add facility details here if available --}}
+                {{-- Anda bisa menambahkan detail fasilitas di sini jika tersedia --}}
             </div>
         </div>
     </div>
@@ -120,6 +131,47 @@
     <style>
         .aspect-16-9 {
             aspect-ratio: 16 / 9;
+        }
+
+        /* Gaya dasar untuk body */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow: hidden; /* Mencegah scrollbar jika gambar latar belakang lebih besar */
+            min-height: 100vh; /* Memastikan halaman mengisi seluruh tinggi viewport */
+            position: relative; /* Penting untuk posisi absolut lapisan latar belakang */
+            background-color: transparent; /* Pastikan body tidak memiliki background solid bawaan */
+        }
+
+        /* Kelas untuk lapisan latar belakang dinamis */
+        .background-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0; /* Mulai tersembunyi */
+            transition: opacity 2s ease-in-out; /* Transisi halus untuk perubahan opacity (lebih cepat) */
+            z-index: -2; /* Ditempatkan di belakang overlay dan konten */
+        }
+
+        /* Lapisan pertama dimulai dengan opacity 1 agar terlihat */
+        #background-layer-1 {
+            opacity: 1;
+        }
+
+        /* Pastikan elemen utama tidak memiliki latar belakang yang menutupi body */
+        #main-content-wrapper {
+            position: relative; /* Penting agar z-index bekerja dengan benar */
+            z-index: 1; /* Pastikan konten utama berada di atas latar belakang */
+            /* background-color: rgba(255, 255, 255, 0.9); Ini sudah diatur dengan Tailwind bg-white/80 */
+            /* Anda mungkin perlu menyesuaikan tinggi atau margin/padding di sini
+               agar konten tidak menutupi seluruh area dan background terlihat */
         }
     </style>
 
@@ -154,11 +206,59 @@
             showSlide(currentIndex);
         }
 
-        // Initialize carousel
+        // Inisialisasi carousel
         document.addEventListener('DOMContentLoaded', () => {
             if (slides.length > 0) {
                 showSlide(currentIndex);
             }
+
+            // JavaScript untuk mengubah gambar latar belakang
+            const backgroundImages = [
+                '/image/view.png', // Ganti dengan path gambar Anda yang sebenarnya
+                '/image/view2.png',
+                '/image/view3.png',
+                '/image/view4.png',
+                '/image/view5.png',
+                '/image/fasilitasimg/gazebo.png',
+                '/image/fasilitasimg/kolam.png',
+                '/image/fasilitasimg/meetingroom.png',
+                '/image/fasilitasimg/parkiran.png',
+                '/image/fasilitasimg/restorasn.png'
+                // Tambahkan lebih banyak path gambar sesuai kebutuhan
+            ];
+
+            let currentBackgroundIndex = 0;
+            let currentLayer = document.getElementById('background-layer-1'); // Lapisan yang sedang aktif
+            let nextLayer = document.getElementById('background-layer-2'); // Lapisan berikutnya
+
+            // Fungsi untuk mengubah latar belakang secara berurutan dengan efek fade
+            function changeSequentialBackground() {
+                // Hitung indeks gambar berikutnya
+                currentBackgroundIndex = (currentBackgroundIndex + 1) % backgroundImages.length;
+
+                const imageUrl = backgroundImages[currentBackgroundIndex];
+
+                // Atur gambar baru pada lapisan yang saat ini tidak terlihat
+                nextLayer.style.backgroundImage = `url('${imageUrl}')`;
+
+                // Mulai transisi: lapisan saat ini memudar keluar, lapisan berikutnya memudar masuk
+                currentLayer.style.opacity = '0';
+                nextLayer.style.opacity = '1';
+
+                // Tukar referensi lapisan untuk siklus berikutnya
+                [currentLayer, nextLayer] = [nextLayer, currentLayer];
+
+                console.log('Mengganti latar belakang ke:', imageUrl); // Debugging: log path gambar
+            }
+
+            // Jalankan fungsi saat halaman dimuat pertama kali
+            // Set gambar pertama pada lapisan awal
+            currentLayer.style.backgroundImage =
+                `url('${backgroundImages[0] || 'https://placehold.co/1920x1080/CCCCCC/000000?text=Initial+Background'}')`;
+
+            // Ubah latar belakang setiap 5 detik (5000 milidetik)
+            // Durasi interval (5s) harus lebih lama dari durasi transisi (2s) untuk transisi yang mulus
+            setInterval(changeSequentialBackground, 5000);
         });
     </script>
 </x-layout>
