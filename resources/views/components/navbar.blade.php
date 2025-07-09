@@ -42,9 +42,12 @@
                                     id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                     <span class="absolute -inset-1.5"></span>
                                     <span class="sr-only">Open user menu</span>
-                                    <img class="size-8 rounded-full"
-                                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                        alt="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor"
+                                        class="relative rounded-full bg-[#5e3d13] p-1 text-[#bf7029] hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#bf7029] focus:outline-hidden size-8">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 0 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                    </svg>
                                 </button>
                             </div>
 
@@ -118,13 +121,16 @@
         <div class="border-t border-[#bf7029] pt-4 pb-3">
             <div class="flex items-center px-5">
                 <div class="shrink-0">
-                    <img class="size-10 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt="">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor"
+                        class="relative rounded-full bg-[#5e3d13] p-1 text-[#bf7029] hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#bf7029] focus:outline-hidden size-8">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 0 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    </svg>
                 </div>
                 <div class="ml-3">
-                    <div class="text-base/5 font-medium text-white">Tom Cook</div>
-                    <div class="text-sm font-medium text-[#bf7029]">tom@example.com</div>
+                    <div class="text-base/5 font-medium text-white">User Name</div>
+                    <div class="text-sm font-medium text-[#bf7029]">Email User</div>
                 </div>
                 <button type="button"
                     class="relative ml-auto shrink-0 rounded-full bg-[#5e3d13] p-1 text-[#bf7029] hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#bf7029] focus:outline-hidden">
