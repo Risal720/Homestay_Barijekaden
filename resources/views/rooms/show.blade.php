@@ -1,4 +1,9 @@
 <x-layout>
+    {{-- Midtrans Snap Script --}}
+    <script type="text/javascript"
+            src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="Mid-client-3TT3nHXLGHIBgTTH"></script>
+
     {{-- Dua lapisan untuk latar belakang yang akan saling cross-fade --}}
     <div id="background-layer-1" class="background-layer"></div>
     <div id="background-layer-2" class="background-layer"></div>
@@ -69,12 +74,12 @@
             {{-- Bagian Kanan: Informasi Singkat --}}
             <div class="p-6">
                 <div class="mb-2">
-                    <div class="bg-pink-300 text-white py-2 px-4 rounded-md inline-block">{{ $room->nama_room }}</div>
+                    <div class="bg-white text-[#bf7029] py-2 px-4 rounded-md inline-block">{{ $room->nama_room }}</div>
                 </div>
                 <div class="flex justify-between mb-4">
                     <a href="{{ route('rooms.index') }}"
-                        class="bg-violet-500 text-white py-2 px-4 rounded-md">Kembali</a>
-                    <div class="bg-purple-400 text-white py-2 px-4 rounded-md">Harga: Rp
+                        class="bg-white text-[#bf7029] py-2 px-4 rounded-md">Kembali</a>
+                    <div class="bg-white text-[#bf7029] py-2 px-4 rounded-md">Harga: Rp
                         {{ number_format($room->harga_room, 0, ',', '.') }}</div>
                 </div>
 
@@ -90,7 +95,7 @@
                     @else
                         <div></div> {{-- Placeholder jika tidak ada rating --}}
                     @endif
-                    <button class="bg-green-400 text-white py-2 px-4 rounded-md">PESAN</button>
+                    <button id="payButton" class="bg-[#bf7029] text-white py-2 px-4 rounded-md">PESAN</button>
                 </div>
                 <div class="grid grid-cols-5 gap-2 mb-4">
                     @forelse ($room->roomCodes as $roomCode)
@@ -119,7 +124,7 @@
         </div>
 
         {{-- Bagian Bawah: Detail Lengkap --}}
-        <div class="mt-4 bg-cyan-500 p-8 text-center relative">
+        <div class="mt-4 bg-white p-8 text-center relative">
             <div class="room-full-details text-gray-700">
                 <h3 class="font-semibold text-lg mb-2">Detail Lengkap</h3>
                 <p>{{ $room->detail_room ?? 'Ini adalah detail lengkap untuk kamar ini...' }}</p>
@@ -171,7 +176,7 @@
             z-index: 1; /* Pastikan konten utama berada di atas latar belakang */
             /* background-color: rgba(255, 255, 255, 0.9); Ini sudah diatur dengan Tailwind bg-white/80 */
             /* Anda mungkin perlu menyesuaikan tinggi atau margin/padding di sini
-               agar konten tidak menutupi seluruh area dan background terlihat */
+                agar konten tidak menutupi seluruh area dan background terlihat */
         }
     </style>
 
@@ -206,10 +211,99 @@
             showSlide(currentIndex);
         }
 
+        // Fungsi untuk menginisiasi pembayaran Midtrans
+        async function initiatePayment() {
+            // Dapatkan data kamar dari Blade (pastikan variabel ini tersedia di Blade Anda)
+            const roomName = "{{ $room->nama_room ?? 'Nama Kamar Default' }}";
+            const roomPrice = {{ $room->harga_room ?? 0 }}; // Pastikan ini adalah angka
+
+            // Data yang akan dikirim ke backend untuk membuat transaksi Midtrans
+            const transactionData = {
+                item_details: [{
+                    id: 'ROOM-{{ $room->id ?? '0' }}', // Menggunakan ID kamar dari Blade
+                    name: roomName,
+                    price: roomPrice,
+                    quantity: 1
+                }],
+                transaction_details: {
+                    order_id: 'ORDER-' + Math.round((new Date()).getTime() / 1000), // Contoh order ID unik
+                    gross_amount: roomPrice,
+                },
+                customer_details: {
+                    // Anda bisa menambahkan detail pelanggan di sini jika tersedia
+                    // Contoh:
+                    // first_name: 'Budi',
+                    // last_name: 'Utomo',
+                    // email: 'budi.utomo@example.com',
+                    // phone: '08123456789',
+                }
+            };
+
+            try {
+                // Panggil endpoint backend Anda untuk mendapatkan Snap Token
+                // Anda HARUS mengimplementasikan endpoint ini di Laravel Anda
+                const response = await fetch('/api/midtrans-transaction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Penting untuk Laravel CSRF protection
+                    },
+                    body: JSON.stringify(transactionData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error from backend:', errorData);
+                    alert('Gagal membuat transaksi. Silakan coba lagi. Detail: ' + (errorData.message || ''));
+                    return;
+                }
+
+                const data = await response.json();
+                const snapToken = data.snap_token;
+
+                if (snapToken) {
+                    // Panggil Midtrans Snap untuk menampilkan popup pembayaran
+                    snap.pay(snapToken, {
+                        onSuccess: function(result) {
+                            /* You may add your own implementation here */
+                            alert("Pembayaran berhasil!");
+                            console.log(result);
+                            // Redirect atau update UI setelah pembayaran sukses
+                        },
+                        onPending: function(result) {
+                            /* You may add your own implementation here */
+                            alert("Pembayaran tertunda!");
+                            console.log(result);
+                        },
+                        onError: function(result) {
+                            /* You may add your own implementation here */
+                            alert("Pembayaran gagal!");
+                            console.log(result);
+                        },
+                        onClose: function() {
+                            /* You may add your own implementation here */
+                            alert('Anda menutup jendela pembayaran.');
+                        }
+                    });
+                } else {
+                    alert('Snap Token tidak diterima dari server.');
+                }
+            } catch (error) {
+                console.error('Error initiating payment:', error);
+                alert('Terjadi kesalahan saat menginisiasi pembayaran. Silakan coba lagi.');
+            }
+        }
+
         // Inisialisasi carousel
         document.addEventListener('DOMContentLoaded', () => {
             if (slides.length > 0) {
                 showSlide(currentIndex);
+            }
+
+            // Tambahkan event listener ke tombol PESAN
+            const payButton = document.getElementById('payButton');
+            if (payButton) {
+                payButton.addEventListener('click', initiatePayment);
             }
 
             // JavaScript untuk mengubah gambar latar belakang

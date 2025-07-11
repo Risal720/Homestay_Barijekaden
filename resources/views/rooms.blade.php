@@ -57,7 +57,7 @@
         }
 
         .room-image {
-            background-color: #90ee90;
+            background-color: #ffffff;
             /* Placeholder background */
             aspect-ratio: 16 / 9;
             display: flex;
@@ -85,15 +85,15 @@
         }
 
         .room-name {
-            background-color: #dda0dd;
-            color: white;
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
             padding: 0.3rem 0.5rem;
             border-radius: 0.25rem;
             font-weight: bold;
         }
 
         .room-info {
-            background-color: #e6e6fa;
+            background-color: #ffffff;
             color: #333;
             padding: 0.3rem 0.5rem;
             border-radius: 0.25rem;
@@ -101,8 +101,8 @@
         }
 
         .room-price {
-            background-color: #dda0dd;
-            color: white;
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
             padding: 0.5rem;
             border-radius: 0.25rem;
             text-align: right;
@@ -110,8 +110,8 @@
         }
 
         .book-button {
-            background-color: #ffa07a;
-            color: white;
+            background-color: #bf7029;
+            color: rgb(255, 255, 255);
             padding: 0.5rem 1rem;
             border-radius: 0.25rem;
             text-align: center;

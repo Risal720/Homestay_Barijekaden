@@ -43,7 +43,7 @@
     .deskripsi-area {
         flex: 1 1 40%;
         padding: 1.5rem;
-        background-color: #f0fdf4;
+        background-color: #ffffff;
         border-radius: 0.5rem;
         margin-bottom: 1rem;
     }
@@ -51,7 +51,7 @@
     .peta-area {
         flex: 1 1 55%;
         height: 400px;
-        background-color: #fce7f3;
+        background-color: #ffffff;
         border-radius: 0.5rem;
         margin-bottom: 1rem;
         display: flex;
@@ -70,7 +70,7 @@
     .kontak-area {
         flex: 1 1 100%;
         padding: 1.5rem;
-        background-color: #e0f2fe;
+        background-color: #ffffff;
         border-radius: 0.5rem;
       }
     </style>
