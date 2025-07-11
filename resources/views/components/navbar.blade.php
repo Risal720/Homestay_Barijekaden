@@ -4,7 +4,7 @@
             <div class="flex items-center">
                 <div class="relative flex items-center">
                     <div class="shrink-0">
-                        <img class="size-10 mr-2" src="image/logo.png" alt="Your Company">
+                        <img class="size-10 mr-2" src="/image/logo.png" alt="Your Company">
                     </div>
                     <a href="/">
                         <p class="text-[#bf7029] norican-regular">Barijekaden</p>
